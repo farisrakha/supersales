@@ -34,6 +34,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { Camera01Icon, IdCardLanyardIcon } from "@hugeicons/core-free-icons"
 
 import { useMockStore, selectKpiForPeriod } from "@/mocks/state"
 import { getDemoNow } from "@/mocks/clock"
@@ -128,8 +130,13 @@ function SupervisorHome() {
   const accounts = useMockStore((s) => s.accounts)
   const visits = useMockStore((s) => s.visits)
   const visitPlans = useMockStore((s) => s.visitPlans)
+  const visitProducts = useMockStore((s) => s.visitProducts)
+  const products = useMockStore((s) => s.products)
+  const quoteInquiries = useMockStore((s) => s.quoteInquiries)
+  const quoteInquiryLines = useMockStore((s) => s.quoteInquiryLines)
   const kpi = useMockStore((s) => selectKpiForPeriod(s, "today"))
 
+  const [activeTab, setActiveTab] = React.useState("today")
   const [selectedVisitId, setSelectedVisitId] = React.useState<string | null>(null)
   const [selectedAccountId, setSelectedAccountId] = React.useState<string | null>(null)
   const [flaggedVisitIds, setFlaggedVisitIds] = React.useState<Set<string>>(new Set())
@@ -196,6 +203,30 @@ function SupervisorHome() {
             .slice(0, 10)
         : [],
     [selectedAccount, visits],
+  )
+
+  const selectedVisitDemoedProducts = React.useMemo(() => {
+    if (!selectedVisit) return []
+    return visitProducts
+      .filter((vp) => vp.visit_id === selectedVisit.id && vp.demo_given)
+      .map((vp) => products.find((p) => p.id === vp.product_id))
+      .filter((p): p is NonNullable<typeof p> => p !== undefined)
+  }, [selectedVisit, visitProducts, products])
+
+  const selectedVisitQuote = React.useMemo(
+    () =>
+      selectedVisit
+        ? (quoteInquiries.find((q) => q.visit_id === selectedVisit.id) ?? null)
+        : null,
+    [selectedVisit, quoteInquiries],
+  )
+
+  const selectedVisitQuoteLines = React.useMemo(
+    () =>
+      selectedVisitQuote
+        ? quoteInquiryLines.filter((l) => l.inquiry_id === selectedVisitQuote.id)
+        : [],
+    [selectedVisitQuote, quoteInquiryLines],
   )
 
   function getRepStatus(repId: string): RepStatus {
@@ -313,7 +344,7 @@ function SupervisorHome() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="today">
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as string)}>
         <TabsList
           variant="line"
           className="mb-6 w-full justify-start rounded-none border-b border-border bg-transparent px-0"
@@ -624,6 +655,27 @@ function SupervisorHome() {
                 </SheetDescription>
               </SheetHeader>
               <div className="space-y-5 px-6 pb-6">
+                {/* Products demoed */}
+                {selectedVisitDemoedProducts.length > 0 && (
+                  <div>
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      Products demoed
+                    </p>
+                    <ul className="space-y-1">
+                      {selectedVisitDemoedProducts.map((product) => (
+                        <li key={product.id} className="text-sm">
+                          <span className="font-medium">{product.code}</span>
+                          <span className="text-muted-foreground">
+                            {" · "}
+                            {product.name}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Outcome + field note */}
                 <div>
                   <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Outcome
@@ -638,6 +690,84 @@ function SupervisorHome() {
                     {selectedVisit.note || "No note recorded."}
                   </p>
                 </div>
+
+                {/* Photo evidence placeholders */}
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Visit evidence
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-col items-center gap-1.5">
+                      <div className="flex aspect-[4/3] w-full items-center justify-center rounded-xl bg-muted">
+                        <HugeiconsIcon
+                          icon={Camera01Icon}
+                          strokeWidth={1.5}
+                          className="size-6 text-muted-foreground/40"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">Demo setup</p>
+                    </div>
+                    <div className="flex flex-col items-center gap-1.5">
+                      <div className="flex aspect-[4/3] w-full items-center justify-center rounded-xl bg-muted">
+                        <HugeiconsIcon
+                          icon={IdCardLanyardIcon}
+                          strokeWidth={1.5}
+                          className="size-6 text-muted-foreground/40"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Client verification
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quote inquiry (only when outcome is quote_submitted) */}
+                {selectedVisit.outcome === "quote_submitted" &&
+                  selectedVisitQuote && (
+                    <div>
+                      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        Quote inquiry
+                      </p>
+                      <div className="space-y-1.5 rounded-xl border border-border px-3 py-2.5">
+                        {selectedVisitQuoteLines.map((line) => {
+                          const product = products.find(
+                            (p) => p.id === line.product_id,
+                          )
+                          return (
+                            <div
+                              key={line.product_id}
+                              className="flex items-baseline justify-between gap-2"
+                            >
+                              <p className="text-sm">
+                                <span className="font-medium">
+                                  {product?.name ?? line.product_id}
+                                </span>
+                                <span className="text-muted-foreground">
+                                  {" "}
+                                  {"×"} {line.quantity}{" "}
+                                  {line.quantity === 1 ? "unit" : "units"}
+                                </span>
+                              </p>
+                              <p className="shrink-0 tabular-nums text-sm text-muted-foreground">
+                                {formatIdr(line.quantity * line.unit_price_idr)}
+                              </p>
+                            </div>
+                          )
+                        })}
+                        <div className="border-t border-border pt-1.5">
+                          <div className="flex items-baseline justify-between">
+                            <p className="text-xs text-muted-foreground">Total</p>
+                            <p className="tabular-nums text-sm font-semibold">
+                              {formatIdr(selectedVisitQuote.total_idr)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                {/* Flag action */}
                 <div className="border-t border-border pt-4">
                   <button
                     type="button"

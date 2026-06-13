@@ -26,7 +26,7 @@ type NavItem = {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Supervisor", to: "/", icon: AnalyticsUpIcon },
+  { label: "Supervisor", to: "/supervisor", icon: AnalyticsUpIcon },
   { label: "Admin", to: "/admin", icon: CheckListIcon },
   { label: "Executive", to: "/exec", icon: ChartIcon },
 ]
@@ -62,10 +62,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {NAV_ITEMS.map((item) => {
                 const isActive =
-                  item.to === "/"
-                    ? pathname === "/"
-                    : pathname === item.to ||
-                      pathname.startsWith(`${item.to}/`)
+                  pathname === item.to || pathname.startsWith(`${item.to}/`)
                 return (
                   <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton
