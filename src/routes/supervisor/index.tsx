@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -59,6 +60,12 @@ function RepStatusBadge({ status }: { status: RepStatus }) {
 }
 
 function SupervisorHome() {
+  const [loading, setLoading] = React.useState(true)
+  React.useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600)
+    return () => clearTimeout(t)
+  }, [])
+
   const demoNow = getDemoNow()
   const today = demoNow.toISOString().slice(0, 10)
 
@@ -104,6 +111,31 @@ function SupervisorHome() {
       .filter((v) => v.rep_id === repId)
       .sort((a, b) => b.created_at.localeCompare(a.created_at))[0]
     return match ? formatTime(match.created_at) : null
+  }
+
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
+        <Skeleton className="mb-2 h-9 w-56" />
+        <Skeleton className="mb-8 h-4 w-40" />
+        <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i} size="sm"><CardContent className="pt-4"><Skeleton className="h-16 w-full" /></CardContent></Card>
+          ))}
+        </div>
+        <Skeleton className="mb-4 h-3 w-24" />
+        <Card size="sm">
+          <Table>
+            <TableHeader><TableRow>{Array.from({ length: 5 }).map((_, i) => <TableHead key={i}><Skeleton className="h-3 w-16" /></TableHead>)}</TableRow></TableHeader>
+            <TableBody>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>{Array.from({ length: 5 }).map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>)}</TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
+    )
   }
 
   return (

@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -65,6 +66,12 @@ function DeltaChip({
 // ─── Main component ───────────────────────────────────────────────────────────
 
 function ExecOverview() {
+  const [loading, setLoading] = React.useState(true)
+  React.useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600)
+    return () => clearTimeout(t)
+  }, [])
+
   const demoNow = getDemoNow()
   const today = demoNow.toISOString().slice(0, 10)
   const cutoff7 = new Date(demoNow.getTime() - 7 * 24 * 60 * 60 * 1000)
@@ -182,6 +189,20 @@ function ExecOverview() {
   }, [products, visitProducts, quoteInquiries, quoteInquiryLines, visits, inPeriod])
 
   // ── Render ────────────────────────────────────────────────────────────────
+
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
+        <Skeleton className="mb-2 h-9 w-64" />
+        <Skeleton className="mb-8 h-4 w-48" />
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i} size="sm"><CardContent className="pt-4"><Skeleton className="h-20 w-full" /></CardContent></Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-10">

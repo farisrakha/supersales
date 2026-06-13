@@ -4,6 +4,7 @@ import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -12,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+
 import {
   Sheet,
   SheetContent,
@@ -72,6 +74,12 @@ function OutcomeBadge({ outcome }: { outcome: VisitOutcome }) {
 }
 
 function ActivityFeedPage() {
+  const [loading, setLoading] = React.useState(true)
+  React.useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 600)
+    return () => clearTimeout(t)
+  }, [])
+
   const reps = useMockStore((s) => s.reps)
   const accounts = useMockStore((s) => s.accounts)
   const visits = useMockStore((s) => s.visits)
@@ -126,6 +134,26 @@ function ActivityFeedPage() {
     updateQuoteStatus(quote.id, "new")
     setFlaggedVisitIds((prev) => new Set([...prev, visitId]))
     toast.success("Flagged for admin review.")
+  }
+
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
+        <Skeleton className="mb-2 h-9 w-44" />
+        <Skeleton className="mb-8 h-4 w-36" />
+        <Skeleton className="mb-4 h-3 w-32" />
+        <Card size="sm">
+          <Table>
+            <TableHeader><TableRow>{Array.from({ length: 5 }).map((_, i) => <TableHead key={i}><Skeleton className="h-3 w-16" /></TableHead>)}</TableRow></TableHeader>
+            <TableBody>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <TableRow key={i}>{Array.from({ length: 5 }).map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>)}</TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
+    )
   }
 
   return (
