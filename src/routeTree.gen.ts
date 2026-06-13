@@ -16,12 +16,10 @@ import { Route as SupervisorIndexRouteImport } from './routes/supervisor/index'
 import { Route as ExecIndexRouteImport } from './routes/exec/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as SupervisorVisitsRouteImport } from './routes/supervisor/visits'
-import { Route as SupervisorRepsRouteImport } from './routes/supervisor/reps'
 import { Route as SupervisorActivityRouteImport } from './routes/supervisor/activity'
 import { Route as SupervisorAccountsRouteImport } from './routes/supervisor/accounts'
 import { Route as AdminRepsRouteImport } from './routes/admin/reps'
 import { Route as AdminQuotesRouteImport } from './routes/admin/quotes'
-import { Route as AdminPlansRouteImport } from './routes/admin/plans'
 import { Route as AdminCatalogRouteImport } from './routes/admin/catalog'
 
 const SupervisorRouteRoute = SupervisorRouteRouteImport.update({
@@ -59,11 +57,6 @@ const SupervisorVisitsRoute = SupervisorVisitsRouteImport.update({
   path: '/visits',
   getParentRoute: () => SupervisorRouteRoute,
 } as any)
-const SupervisorRepsRoute = SupervisorRepsRouteImport.update({
-  id: '/reps',
-  path: '/reps',
-  getParentRoute: () => SupervisorRouteRoute,
-} as any)
 const SupervisorActivityRoute = SupervisorActivityRouteImport.update({
   id: '/activity',
   path: '/activity',
@@ -84,11 +77,6 @@ const AdminQuotesRoute = AdminQuotesRouteImport.update({
   path: '/quotes',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminPlansRoute = AdminPlansRouteImport.update({
-  id: '/plans',
-  path: '/plans',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
 const AdminCatalogRoute = AdminCatalogRouteImport.update({
   id: '/catalog',
   path: '/catalog',
@@ -100,12 +88,10 @@ export interface FileRoutesByFullPath {
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
   '/admin/catalog': typeof AdminCatalogRoute
-  '/admin/plans': typeof AdminPlansRoute
   '/admin/quotes': typeof AdminQuotesRoute
   '/admin/reps': typeof AdminRepsRoute
   '/supervisor/accounts': typeof SupervisorAccountsRoute
   '/supervisor/activity': typeof SupervisorActivityRoute
-  '/supervisor/reps': typeof SupervisorRepsRoute
   '/supervisor/visits': typeof SupervisorVisitsRoute
   '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
@@ -113,12 +99,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/admin/catalog': typeof AdminCatalogRoute
-  '/admin/plans': typeof AdminPlansRoute
   '/admin/quotes': typeof AdminQuotesRoute
   '/admin/reps': typeof AdminRepsRoute
   '/supervisor/accounts': typeof SupervisorAccountsRoute
   '/supervisor/activity': typeof SupervisorActivityRoute
-  '/supervisor/reps': typeof SupervisorRepsRoute
   '/supervisor/visits': typeof SupervisorVisitsRoute
   '/admin': typeof AdminIndexRoute
   '/exec': typeof ExecIndexRoute
@@ -130,12 +114,10 @@ export interface FileRoutesById {
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
   '/admin/catalog': typeof AdminCatalogRoute
-  '/admin/plans': typeof AdminPlansRoute
   '/admin/quotes': typeof AdminQuotesRoute
   '/admin/reps': typeof AdminRepsRoute
   '/supervisor/accounts': typeof SupervisorAccountsRoute
   '/supervisor/activity': typeof SupervisorActivityRoute
-  '/supervisor/reps': typeof SupervisorRepsRoute
   '/supervisor/visits': typeof SupervisorVisitsRoute
   '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
@@ -148,12 +130,10 @@ export interface FileRouteTypes {
     | '/exec'
     | '/supervisor'
     | '/admin/catalog'
-    | '/admin/plans'
     | '/admin/quotes'
     | '/admin/reps'
     | '/supervisor/accounts'
     | '/supervisor/activity'
-    | '/supervisor/reps'
     | '/supervisor/visits'
     | '/admin/'
     | '/exec/'
@@ -161,12 +141,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/admin/catalog'
-    | '/admin/plans'
     | '/admin/quotes'
     | '/admin/reps'
     | '/supervisor/accounts'
     | '/supervisor/activity'
-    | '/supervisor/reps'
     | '/supervisor/visits'
     | '/admin'
     | '/exec'
@@ -177,12 +155,10 @@ export interface FileRouteTypes {
     | '/exec'
     | '/supervisor'
     | '/admin/catalog'
-    | '/admin/plans'
     | '/admin/quotes'
     | '/admin/reps'
     | '/supervisor/accounts'
     | '/supervisor/activity'
-    | '/supervisor/reps'
     | '/supervisor/visits'
     | '/admin/'
     | '/exec/'
@@ -246,13 +222,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupervisorVisitsRouteImport
       parentRoute: typeof SupervisorRouteRoute
     }
-    '/supervisor/reps': {
-      id: '/supervisor/reps'
-      path: '/reps'
-      fullPath: '/supervisor/reps'
-      preLoaderRoute: typeof SupervisorRepsRouteImport
-      parentRoute: typeof SupervisorRouteRoute
-    }
     '/supervisor/activity': {
       id: '/supervisor/activity'
       path: '/activity'
@@ -281,13 +250,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuotesRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/admin/plans': {
-      id: '/admin/plans'
-      path: '/plans'
-      fullPath: '/admin/plans'
-      preLoaderRoute: typeof AdminPlansRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
     '/admin/catalog': {
       id: '/admin/catalog'
       path: '/catalog'
@@ -300,7 +262,6 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminCatalogRoute: typeof AdminCatalogRoute
-  AdminPlansRoute: typeof AdminPlansRoute
   AdminQuotesRoute: typeof AdminQuotesRoute
   AdminRepsRoute: typeof AdminRepsRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -308,7 +269,6 @@ interface AdminRouteRouteChildren {
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCatalogRoute: AdminCatalogRoute,
-  AdminPlansRoute: AdminPlansRoute,
   AdminQuotesRoute: AdminQuotesRoute,
   AdminRepsRoute: AdminRepsRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -333,7 +293,6 @@ const ExecRouteRouteWithChildren = ExecRouteRoute._addFileChildren(
 interface SupervisorRouteRouteChildren {
   SupervisorAccountsRoute: typeof SupervisorAccountsRoute
   SupervisorActivityRoute: typeof SupervisorActivityRoute
-  SupervisorRepsRoute: typeof SupervisorRepsRoute
   SupervisorVisitsRoute: typeof SupervisorVisitsRoute
   SupervisorIndexRoute: typeof SupervisorIndexRoute
 }
@@ -341,7 +300,6 @@ interface SupervisorRouteRouteChildren {
 const SupervisorRouteRouteChildren: SupervisorRouteRouteChildren = {
   SupervisorAccountsRoute: SupervisorAccountsRoute,
   SupervisorActivityRoute: SupervisorActivityRoute,
-  SupervisorRepsRoute: SupervisorRepsRoute,
   SupervisorVisitsRoute: SupervisorVisitsRoute,
   SupervisorIndexRoute: SupervisorIndexRoute,
 }

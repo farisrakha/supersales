@@ -4,7 +4,6 @@ import type { IconSvgElement } from "@hugeicons/react"
 import {
   ActivityIcon,
   Building01Icon,
-  Calendar01Icon,
   ChartIcon,
   CheckListIcon,
   Home01Icon,
@@ -48,7 +47,6 @@ const CONFIGS: Record<Role, SidebarConfig> = {
       { label: "Visit queue", to: "/supervisor/visits", icon: CheckListIcon },
       { label: "Activity feed", to: "/supervisor/activity", icon: ActivityIcon },
       { label: "Accounts", to: "/supervisor/accounts", icon: Building01Icon },
-      { label: "Reps", to: "/supervisor/reps", icon: UserGroupIcon },
     ],
   },
   admin: {
@@ -58,7 +56,6 @@ const CONFIGS: Record<Role, SidebarConfig> = {
       { label: "Reps", to: "/admin/reps", icon: UserGroupIcon },
       { label: "Product catalog", to: "/admin/catalog", icon: Package01Icon },
       { label: "Quote inbox", to: "/admin/quotes", icon: InboxIcon },
-      { label: "Visit plans", to: "/admin/plans", icon: Calendar01Icon },
     ],
   },
   exec: {
