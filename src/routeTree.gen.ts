@@ -9,25 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as DispatchRouteImport } from './routes/dispatch'
-import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as SupervisorRouteRouteImport } from './routes/supervisor/route'
 import { Route as ExecRouteRouteImport } from './routes/exec/route'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as SupervisorIndexRouteImport } from './routes/supervisor/index'
 import { Route as ExecIndexRouteImport } from './routes/exec/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 
-const DispatchRoute = DispatchRouteImport.update({
-  id: '/dispatch',
-  path: '/dispatch',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CatalogRoute = CatalogRouteImport.update({
-  id: '/catalog',
-  path: '/catalog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SupervisorRouteRoute = SupervisorRouteRouteImport.update({
   id: '/supervisor',
   path: '/supervisor',
@@ -36,11 +23,6 @@ const SupervisorRouteRoute = SupervisorRouteRouteImport.update({
 const ExecRouteRoute = ExecRouteRouteImport.update({
   id: '/exec',
   path: '/exec',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupervisorIndexRoute = SupervisorIndexRouteImport.update({
@@ -60,84 +42,47 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
-  '/catalog': typeof CatalogRoute
-  '/dispatch': typeof DispatchRoute
   '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
   '/supervisor/': typeof SupervisorIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/catalog': typeof CatalogRoute
-  '/dispatch': typeof DispatchRoute
   '/admin': typeof AdminIndexRoute
   '/exec': typeof ExecIndexRoute
   '/supervisor': typeof SupervisorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
-  '/catalog': typeof CatalogRoute
-  '/dispatch': typeof DispatchRoute
   '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
   '/supervisor/': typeof SupervisorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/exec'
-    | '/supervisor'
-    | '/catalog'
-    | '/dispatch'
-    | '/admin/'
-    | '/exec/'
-    | '/supervisor/'
+  fullPaths: '/exec' | '/supervisor' | '/admin/' | '/exec/' | '/supervisor/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/catalog' | '/dispatch' | '/admin' | '/exec' | '/supervisor'
+  to: '/admin' | '/exec' | '/supervisor'
   id:
     | '__root__'
-    | '/'
     | '/exec'
     | '/supervisor'
-    | '/catalog'
-    | '/dispatch'
     | '/admin/'
     | '/exec/'
     | '/supervisor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   ExecRouteRoute: typeof ExecRouteRouteWithChildren
   SupervisorRouteRoute: typeof SupervisorRouteRouteWithChildren
-  CatalogRoute: typeof CatalogRoute
-  DispatchRoute: typeof DispatchRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/dispatch': {
-      id: '/dispatch'
-      path: '/dispatch'
-      fullPath: '/dispatch'
-      preLoaderRoute: typeof DispatchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/catalog': {
-      id: '/catalog'
-      path: '/catalog'
-      fullPath: '/catalog'
-      preLoaderRoute: typeof CatalogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/supervisor': {
       id: '/supervisor'
       path: '/supervisor'
@@ -150,13 +95,6 @@ declare module '@tanstack/react-router' {
       path: '/exec'
       fullPath: '/exec'
       preLoaderRoute: typeof ExecRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supervisor/': {
@@ -208,11 +146,8 @@ const SupervisorRouteRouteWithChildren = SupervisorRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   ExecRouteRoute: ExecRouteRouteWithChildren,
   SupervisorRouteRoute: SupervisorRouteRouteWithChildren,
-  CatalogRoute: CatalogRoute,
-  DispatchRoute: DispatchRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
