@@ -223,7 +223,12 @@ function QuotesPage() {
         <TabsContent value={quoteSubTab}>
           {filteredQuotes.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border py-12 text-center">
-              <p className="text-sm text-muted-foreground">No quotes in this status.</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                No {quoteSubTab === "all" ? "" : `${quoteSubTab} `}inquiries.
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground/70">
+                Submitted quote inquiries from field reps appear here.
+              </p>
             </div>
           ) : (
             <Card size="sm">

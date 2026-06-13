@@ -138,6 +138,16 @@ function ActivityFeedPage() {
       <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         All visits, newest first
       </p>
+      {sortedVisits.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border py-16 text-center">
+          <p className="text-sm font-medium text-muted-foreground">
+            No visits logged today.
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground/70">
+            Completed visits will appear here as reps check in.
+          </p>
+        </div>
+      ) : (
       <Card size="sm">
         <Table>
           <TableHeader>
@@ -205,6 +215,7 @@ function ActivityFeedPage() {
           </TableBody>
         </Table>
       </Card>
+      )}
 
       {/* Visit detail sheet */}
       <Sheet

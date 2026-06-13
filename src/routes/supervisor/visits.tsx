@@ -83,9 +83,16 @@ function VisitQueuePage() {
 
       {filteredPlans.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            All visits completed for the selected rep.
+          <p className="text-sm font-medium text-muted-foreground">
+            {todayPendingPlans.length === 0
+              ? "No visits scheduled for today."
+              : "No visits for this rep today."}
           </p>
+          {todayPendingPlans.length === 0 && (
+            <p className="mt-1 text-sm text-muted-foreground/70">
+              Visit plans are set up in the Admin portal.
+            </p>
+          )}
         </div>
       ) : (
         <Card size="sm">

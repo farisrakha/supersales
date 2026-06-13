@@ -116,6 +116,13 @@ function AccountsPage() {
       <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         All accounts
       </p>
+      {accounts.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border py-16 text-center">
+          <p className="text-sm text-muted-foreground">
+            No accounts assigned to your territory yet.
+          </p>
+        </div>
+      ) : (
       <Card size="sm">
         <Table>
           <TableHeader>
@@ -181,6 +188,7 @@ function AccountsPage() {
           </TableBody>
         </Table>
       </Card>
+      )}
 
       {/* Account detail sheet */}
       <Sheet
