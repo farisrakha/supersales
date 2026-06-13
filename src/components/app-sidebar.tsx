@@ -2,9 +2,15 @@ import { Link, useRouterState } from "@tanstack/react-router"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { IconSvgElement } from "@hugeicons/react"
 import {
-  AnalyticsUpIcon,
-  CheckListIcon,
+  ActivityIcon,
+  Building01Icon,
+  Calendar01Icon,
   ChartIcon,
+  CheckListIcon,
+  Home01Icon,
+  InboxIcon,
+  Package01Icon,
+  UserGroupIcon,
 } from "@hugeicons/core-free-icons"
 
 import {
@@ -13,26 +19,60 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useMockStore } from "@/mocks/state"
+import type { Role } from "@/mocks/types"
 
 type NavItem = {
   label: string
   to: string
   icon: IconSvgElement
+  exact?: boolean
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: "Supervisor", to: "/supervisor", icon: AnalyticsUpIcon },
-  { label: "Admin", to: "/admin", icon: CheckListIcon },
-  { label: "Executive", to: "/exec", icon: ChartIcon },
-]
+type SidebarConfig = {
+  label: string
+  items: NavItem[]
+}
+
+const CONFIGS: Record<Role, SidebarConfig> = {
+  supervisor: {
+    label: "Supervisor",
+    items: [
+      { label: "Today", to: "/supervisor", icon: Home01Icon, exact: true },
+      { label: "Visit queue", to: "/supervisor/visits", icon: CheckListIcon },
+      { label: "Activity feed", to: "/supervisor/activity", icon: ActivityIcon },
+      { label: "Accounts", to: "/supervisor/accounts", icon: Building01Icon },
+      { label: "Reps", to: "/supervisor/reps", icon: UserGroupIcon },
+    ],
+  },
+  admin: {
+    label: "Admin",
+    items: [
+      { label: "Accounts", to: "/admin", icon: Building01Icon, exact: true },
+      { label: "Reps", to: "/admin/reps", icon: UserGroupIcon },
+      { label: "Product catalog", to: "/admin/catalog", icon: Package01Icon },
+      { label: "Quote inbox", to: "/admin/quotes", icon: InboxIcon },
+      { label: "Visit plans", to: "/admin/plans", icon: Calendar01Icon },
+    ],
+  },
+  exec: {
+    label: "Executive",
+    items: [
+      { label: "Overview", to: "/exec", icon: ChartIcon, exact: true },
+    ],
+  },
+}
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const role = useMockStore((s) => s.currentRole)
+  const config = CONFIGS[role]
 
   return (
     <Sidebar variant="inset" collapsible="icon">
@@ -58,11 +98,13 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>{config.label}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {NAV_ITEMS.map((item) => {
-                const isActive =
-                  pathname === item.to || pathname.startsWith(`${item.to}/`)
+              {config.items.map((item) => {
+                const isActive = item.exact
+                  ? pathname === item.to || pathname === `${item.to}/`
+                  : pathname === item.to || pathname.startsWith(`${item.to}/`)
                 return (
                   <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton

@@ -11,9 +11,18 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupervisorRouteRouteImport } from './routes/supervisor/route'
 import { Route as ExecRouteRouteImport } from './routes/exec/route'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as SupervisorIndexRouteImport } from './routes/supervisor/index'
 import { Route as ExecIndexRouteImport } from './routes/exec/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as SupervisorVisitsRouteImport } from './routes/supervisor/visits'
+import { Route as SupervisorRepsRouteImport } from './routes/supervisor/reps'
+import { Route as SupervisorActivityRouteImport } from './routes/supervisor/activity'
+import { Route as SupervisorAccountsRouteImport } from './routes/supervisor/accounts'
+import { Route as AdminRepsRouteImport } from './routes/admin/reps'
+import { Route as AdminQuotesRouteImport } from './routes/admin/quotes'
+import { Route as AdminPlansRouteImport } from './routes/admin/plans'
+import { Route as AdminCatalogRouteImport } from './routes/admin/catalog'
 
 const SupervisorRouteRoute = SupervisorRouteRouteImport.update({
   id: '/supervisor',
@@ -23,6 +32,11 @@ const SupervisorRouteRoute = SupervisorRouteRouteImport.update({
 const ExecRouteRoute = ExecRouteRouteImport.update({
   id: '/exec',
   path: '/exec',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupervisorIndexRoute = SupervisorIndexRouteImport.update({
@@ -36,49 +50,149 @@ const ExecIndexRoute = ExecIndexRouteImport.update({
   getParentRoute: () => ExecRouteRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const SupervisorVisitsRoute = SupervisorVisitsRouteImport.update({
+  id: '/visits',
+  path: '/visits',
+  getParentRoute: () => SupervisorRouteRoute,
+} as any)
+const SupervisorRepsRoute = SupervisorRepsRouteImport.update({
+  id: '/reps',
+  path: '/reps',
+  getParentRoute: () => SupervisorRouteRoute,
+} as any)
+const SupervisorActivityRoute = SupervisorActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => SupervisorRouteRoute,
+} as any)
+const SupervisorAccountsRoute = SupervisorAccountsRouteImport.update({
+  id: '/accounts',
+  path: '/accounts',
+  getParentRoute: () => SupervisorRouteRoute,
+} as any)
+const AdminRepsRoute = AdminRepsRouteImport.update({
+  id: '/reps',
+  path: '/reps',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminQuotesRoute = AdminQuotesRouteImport.update({
+  id: '/quotes',
+  path: '/quotes',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminPlansRoute = AdminPlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCatalogRoute = AdminCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/admin': typeof AdminRouteRouteWithChildren
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/plans': typeof AdminPlansRoute
+  '/admin/quotes': typeof AdminQuotesRoute
+  '/admin/reps': typeof AdminRepsRoute
+  '/supervisor/accounts': typeof SupervisorAccountsRoute
+  '/supervisor/activity': typeof SupervisorActivityRoute
+  '/supervisor/reps': typeof SupervisorRepsRoute
+  '/supervisor/visits': typeof SupervisorVisitsRoute
   '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
   '/supervisor/': typeof SupervisorIndexRoute
 }
 export interface FileRoutesByTo {
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/plans': typeof AdminPlansRoute
+  '/admin/quotes': typeof AdminQuotesRoute
+  '/admin/reps': typeof AdminRepsRoute
+  '/supervisor/accounts': typeof SupervisorAccountsRoute
+  '/supervisor/activity': typeof SupervisorActivityRoute
+  '/supervisor/reps': typeof SupervisorRepsRoute
+  '/supervisor/visits': typeof SupervisorVisitsRoute
   '/admin': typeof AdminIndexRoute
   '/exec': typeof ExecIndexRoute
   '/supervisor': typeof SupervisorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/admin': typeof AdminRouteRouteWithChildren
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/plans': typeof AdminPlansRoute
+  '/admin/quotes': typeof AdminQuotesRoute
+  '/admin/reps': typeof AdminRepsRoute
+  '/supervisor/accounts': typeof SupervisorAccountsRoute
+  '/supervisor/activity': typeof SupervisorActivityRoute
+  '/supervisor/reps': typeof SupervisorRepsRoute
+  '/supervisor/visits': typeof SupervisorVisitsRoute
   '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
   '/supervisor/': typeof SupervisorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/exec' | '/supervisor' | '/admin/' | '/exec/' | '/supervisor/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/admin' | '/exec' | '/supervisor'
-  id:
-    | '__root__'
+  fullPaths:
+    | '/admin'
     | '/exec'
     | '/supervisor'
+    | '/admin/catalog'
+    | '/admin/plans'
+    | '/admin/quotes'
+    | '/admin/reps'
+    | '/supervisor/accounts'
+    | '/supervisor/activity'
+    | '/supervisor/reps'
+    | '/supervisor/visits'
+    | '/admin/'
+    | '/exec/'
+    | '/supervisor/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/admin/catalog'
+    | '/admin/plans'
+    | '/admin/quotes'
+    | '/admin/reps'
+    | '/supervisor/accounts'
+    | '/supervisor/activity'
+    | '/supervisor/reps'
+    | '/supervisor/visits'
+    | '/admin'
+    | '/exec'
+    | '/supervisor'
+  id:
+    | '__root__'
+    | '/admin'
+    | '/exec'
+    | '/supervisor'
+    | '/admin/catalog'
+    | '/admin/plans'
+    | '/admin/quotes'
+    | '/admin/reps'
+    | '/supervisor/accounts'
+    | '/supervisor/activity'
+    | '/supervisor/reps'
+    | '/supervisor/visits'
     | '/admin/'
     | '/exec/'
     | '/supervisor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   ExecRouteRoute: typeof ExecRouteRouteWithChildren
   SupervisorRouteRoute: typeof SupervisorRouteRouteWithChildren
-  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -97,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExecRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/supervisor/': {
       id: '/supervisor/'
       path: '/'
@@ -113,13 +234,89 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
+      path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/supervisor/visits': {
+      id: '/supervisor/visits'
+      path: '/visits'
+      fullPath: '/supervisor/visits'
+      preLoaderRoute: typeof SupervisorVisitsRouteImport
+      parentRoute: typeof SupervisorRouteRoute
+    }
+    '/supervisor/reps': {
+      id: '/supervisor/reps'
+      path: '/reps'
+      fullPath: '/supervisor/reps'
+      preLoaderRoute: typeof SupervisorRepsRouteImport
+      parentRoute: typeof SupervisorRouteRoute
+    }
+    '/supervisor/activity': {
+      id: '/supervisor/activity'
+      path: '/activity'
+      fullPath: '/supervisor/activity'
+      preLoaderRoute: typeof SupervisorActivityRouteImport
+      parentRoute: typeof SupervisorRouteRoute
+    }
+    '/supervisor/accounts': {
+      id: '/supervisor/accounts'
+      path: '/accounts'
+      fullPath: '/supervisor/accounts'
+      preLoaderRoute: typeof SupervisorAccountsRouteImport
+      parentRoute: typeof SupervisorRouteRoute
+    }
+    '/admin/reps': {
+      id: '/admin/reps'
+      path: '/reps'
+      fullPath: '/admin/reps'
+      preLoaderRoute: typeof AdminRepsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/quotes': {
+      id: '/admin/quotes'
+      path: '/quotes'
+      fullPath: '/admin/quotes'
+      preLoaderRoute: typeof AdminQuotesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/plans': {
+      id: '/admin/plans'
+      path: '/plans'
+      fullPath: '/admin/plans'
+      preLoaderRoute: typeof AdminPlansRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/catalog': {
+      id: '/admin/catalog'
+      path: '/catalog'
+      fullPath: '/admin/catalog'
+      preLoaderRoute: typeof AdminCatalogRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
   }
 }
+
+interface AdminRouteRouteChildren {
+  AdminCatalogRoute: typeof AdminCatalogRoute
+  AdminPlansRoute: typeof AdminPlansRoute
+  AdminQuotesRoute: typeof AdminQuotesRoute
+  AdminRepsRoute: typeof AdminRepsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminCatalogRoute: AdminCatalogRoute,
+  AdminPlansRoute: AdminPlansRoute,
+  AdminQuotesRoute: AdminQuotesRoute,
+  AdminRepsRoute: AdminRepsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
 
 interface ExecRouteRouteChildren {
   ExecIndexRoute: typeof ExecIndexRoute
@@ -134,10 +331,18 @@ const ExecRouteRouteWithChildren = ExecRouteRoute._addFileChildren(
 )
 
 interface SupervisorRouteRouteChildren {
+  SupervisorAccountsRoute: typeof SupervisorAccountsRoute
+  SupervisorActivityRoute: typeof SupervisorActivityRoute
+  SupervisorRepsRoute: typeof SupervisorRepsRoute
+  SupervisorVisitsRoute: typeof SupervisorVisitsRoute
   SupervisorIndexRoute: typeof SupervisorIndexRoute
 }
 
 const SupervisorRouteRouteChildren: SupervisorRouteRouteChildren = {
+  SupervisorAccountsRoute: SupervisorAccountsRoute,
+  SupervisorActivityRoute: SupervisorActivityRoute,
+  SupervisorRepsRoute: SupervisorRepsRoute,
+  SupervisorVisitsRoute: SupervisorVisitsRoute,
   SupervisorIndexRoute: SupervisorIndexRoute,
 }
 
@@ -146,9 +351,9 @@ const SupervisorRouteRouteWithChildren = SupervisorRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   ExecRouteRoute: ExecRouteRouteWithChildren,
   SupervisorRouteRoute: SupervisorRouteRouteWithChildren,
-  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
