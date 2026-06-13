@@ -79,6 +79,7 @@ function ActivityFeedPage() {
   const products = useMockStore((s) => s.products)
   const quoteInquiries = useMockStore((s) => s.quoteInquiries)
   const quoteInquiryLines = useMockStore((s) => s.quoteInquiryLines)
+  const updateQuoteStatus = useMockStore((s) => s.updateQuoteStatus)
 
   const [selectedVisitId, setSelectedVisitId] = React.useState<string | null>(null)
   const [flaggedVisitIds, setFlaggedVisitIds] = React.useState<Set<string>>(new Set())
@@ -117,6 +118,12 @@ function ActivityFeedPage() {
   )
 
   function flagVisit(visitId: string) {
+    const quote = quoteInquiries.find((q) => q.visit_id === visitId)
+    if (!quote) {
+      toast.error("No quote inquiry attached to this visit")
+      return
+    }
+    updateQuoteStatus(quote.id, "new")
     setFlaggedVisitIds((prev) => new Set([...prev, visitId]))
     toast.success("Flagged for admin review.")
   }
