@@ -85,6 +85,36 @@ v1 was a fulfillment OS (suggested orders, dispatch waves, driver delivery, stor
 - Outcome badges use client language: "Interested" / "Not interested this visit" / "Quote submitted" -- not internal status codes.
 - Evidence photos displayed as thumbnails; click to expand via Dialog.
 
+## Design quality bar
+
+### Visual design
+
+- This is a B2B tool for field sales professionals, not a marketing page. Design for density, clarity, and trust.
+- Typography carries personality. Use weight and size contrast deliberately: minimum 1.25 ratio between scale steps.
+- Spend boldness in one place per surface. One memorable element; keep everything else quiet and disciplined.
+- Color encodes meaning, not decoration. Status badges use semantic color. Neutral surfaces stay neutral.
+- Spacing varies for rhythm. Same padding everywhere is monotony.
+- No side-stripe borders, no gradient text, no glassmorphism, no hero metric template, no identical card grids.
+- No pure black (#000), no pure white (#fff) in product surfaces. Use OKLCH as configured in `src/styles.css`.
+
+### Copy quality
+
+- Write from the user's side of the screen. Name things by what people control, not how the system is built.
+- Active voice always. CTAs say what the user gets: "Flag for admin", "Forward to sales director", "Mark visit complete". Never "Submit" or "OK".
+- Empty states are invitations to act, not descriptions of absence. "No visits logged today" is wrong. "Visits completed today will appear here" is right.
+- Errors explain what happened and how to fix it. Never vague. Never apologetic.
+- Sentence case everywhere. Never Title Case in UI copy.
+- No filler words. No buzzwords. No em dashes.
+
+### Self-critique rule
+
+Before considering any UI task done, ask:
+- Does this look like a template anyone could have made?
+- Is there one thing on this screen that is specific to SuperSales and could not belong to a generic SaaS?
+- Does every piece of copy say exactly what it needs to say and nothing more?
+
+If the answer to the first question is yes, revise before committing.
+
 ## Surfaces and Personas
 
 The role switcher in the app header lets a reviewer impersonate any persona.
