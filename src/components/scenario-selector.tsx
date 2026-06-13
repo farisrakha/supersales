@@ -9,9 +9,8 @@ import { useMockStore } from "@/mocks/state"
 import type { ScenarioId } from "@/mocks/types"
 
 const SCENARIOS: { id: ScenarioId; label: string; sublabel: string }[] = [
-  { id: "calm-tuesday", label: "Calm Tuesday", sublabel: "Baseline volume" },
-  { id: "exception-friday", label: "Exception Friday", sublabel: "Refusals and damages" },
-  { id: "end-of-month-surge", label: "End of month surge", sublabel: "Peak demand" },
+  { id: "active-tuesday", label: "Active Tuesday", sublabel: "Normal day, 6 of 8 reps active" },
+  { id: "territory-gap", label: "Territory gap", sublabel: "2 accounts overdue, 1 rep behind" },
 ]
 
 export function ScenarioSelector() {
@@ -23,10 +22,10 @@ export function ScenarioSelector() {
     <Select
       value={scenario}
       onValueChange={(value) => {
-        if (value) setScenario(value)
+        if (value) setScenario(value as ScenarioId)
       }}
     >
-      <SelectTrigger size="sm" aria-label="Switch scenario" className="min-w-48">
+      <SelectTrigger size="sm" aria-label="Switch scenario">
         <SelectValue>
           <span className="font-medium">{current.label}</span>
         </SelectValue>

@@ -19,28 +19,20 @@ import {
 import { useDevtools } from "@/components/devtools-context"
 import { useMockStore } from "@/mocks/state"
 
-/**
- * Global jump menu. Press cmd+k or ctrl+k anywhere.
- * Three groups: stores, recent orders, SKUs. Selecting an item navigates.
- */
 export function CommandPalette() {
   const open = useDevtools().commandOpen
   const setOpen = useDevtools().setCommandOpen
   const navigate = useNavigate()
 
-  const stores = useMockStore((s) => s.stores)
-  const orders = useMockStore((s) => s.orders)
-  const skus = useMockStore((s) => s.skus)
+  const accounts = useMockStore((s) => s.accounts)
+  const visits = useMockStore((s) => s.visits)
+  const products = useMockStore((s) => s.products)
 
-  const recentOrders = React.useMemo(
-    () => orders.slice(0, 25),
-    [orders],
-  )
+  const recentVisits = React.useMemo(() => visits.slice(0, 20), [visits])
 
-  function go(to: string, params?: Record<string, string>) {
+  function go(to: string) {
     setOpen(false)
-    // TanStack router accepts string `to`; cast for ergonomic call sites.
-    navigate({ to, params } as never)
+    navigate({ to } as never)
   }
 
   return (
@@ -48,26 +40,23 @@ export function CommandPalette() {
       open={open}
       onOpenChange={setOpen}
       title="Jump to anything"
-      description="Search stores, orders, and catalog items by name or code."
+      description="Search accounts, visits, and product catalog."
     >
-      <CommandInput placeholder="Search stores, orders, SKUs" />
+      <CommandInput placeholder="Search accounts, visits, products" />
       <CommandList>
         <CommandEmpty>No results. Try a different term.</CommandEmpty>
 
-        <CommandGroup heading="Stores">
-          {stores.slice(0, 8).map((store) => (
+        <CommandGroup heading="Accounts">
+          {accounts.slice(0, 8).map((account) => (
             <CommandItem
-              key={store.id}
-              value={`store ${store.name} ${store.id}`}
-              onSelect={() => go("/stores")}
+              key={account.id}
+              value={`account ${account.name} ${account.id}`}
+              onSelect={() => go("/admin")}
             >
-              <HugeiconsIcon
-                icon={StoreLocation01Icon}
-                strokeWidth={2}
-              />
-              <span className="truncate">{store.name}</span>
+              <HugeiconsIcon icon={StoreLocation01Icon} strokeWidth={2} />
+              <span className="truncate">{account.name}</span>
               <span className="ml-auto text-xs text-muted-foreground tabular-nums">
-                {store.id.slice(-3)}
+                {account.city}
               </span>
             </CommandItem>
           ))}
@@ -75,22 +64,17 @@ export function CommandPalette() {
 
         <CommandSeparator />
 
-        <CommandGroup heading="Recent orders">
-          {recentOrders.map((o) => (
+        <CommandGroup heading="Recent visits">
+          {recentVisits.map((v) => (
             <CommandItem
-              key={o.id}
-              value={`order ${o.id} ${o.status}`}
-              onSelect={() => {
-                // Orders open in DC dispatch when DC role is active; for the
-                // store role they open in receive flow. The DC dispatch view
-                // is the most useful default jump target across roles.
-                go("/dispatch")
-              }}
+              key={v.id}
+              value={`visit ${v.id} ${v.account_id} ${v.outcome}`}
+              onSelect={() => go("/supervisor")}
             >
               <HugeiconsIcon icon={PackageIcon} strokeWidth={2} />
-              <span className="truncate">{o.id}</span>
+              <span className="truncate">{v.account_id}</span>
               <span className="ml-auto text-xs text-muted-foreground capitalize">
-                {o.status.replace("_", " ")}
+                {v.outcome.replace("_", " ")}
               </span>
             </CommandItem>
           ))}
@@ -98,17 +82,17 @@ export function CommandPalette() {
 
         <CommandSeparator />
 
-        <CommandGroup heading="Catalog">
-          {skus.slice(0, 8).map((sku) => (
+        <CommandGroup heading="Products">
+          {products.slice(0, 8).map((product) => (
             <CommandItem
-              key={sku.id}
-              value={`sku ${sku.name} ${sku.code}`}
-              onSelect={() => go("/catalog")}
+              key={product.id}
+              value={`product ${product.name} ${product.code}`}
+              onSelect={() => go("/admin")}
             >
               <HugeiconsIcon icon={Tag01Icon} strokeWidth={2} />
-              <span className="truncate">{sku.name}</span>
+              <span className="truncate">{product.name}</span>
               <span className="ml-auto text-xs text-muted-foreground tabular-nums">
-                {sku.code}
+                {product.code}
               </span>
             </CommandItem>
           ))}

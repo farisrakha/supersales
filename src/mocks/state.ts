@@ -1,111 +1,62 @@
 import { create } from 'zustand'
 import type {
-  DC,
-  Exception,
-  InferredStock,
-  Order,
-  OrderLine,
-  OrderStatus,
-  POD,
+  Account,
+  KpiSlice,
+  Product,
+  QuoteInquiry,
+  QuoteInquiryLine,
+  QuoteStatus,
+  Rep,
   Role,
-  SKU,
   ScenarioId,
-  Store,
-  Truck,
   User,
-  Wave,
+  Visit,
+  VisitEvidence,
+  VisitOutcome,
+  VisitPlan,
+  VisitPlanStatus,
+  VisitProduct,
 } from './types'
-import calmTuesday from './scenarios/calm-tuesday'
-import exceptionFriday from './scenarios/exception-friday'
-import endOfMonthSurge from './scenarios/end-of-month-surge'
+import activeTuesdayScenario from './scenarios/active-tuesday'
+import territoryGapScenario from './scenarios/territory-gap'
 import { getDemoNow } from './clock'
+import { kpis } from './fixtures/kpis'
 
 export interface MockDataSlice {
-  dcs: DC[]
-  stores: Store[]
-  skus: SKU[]
-  inferredStock: InferredStock[]
-  orders: Order[]
-  orderLines: OrderLine[]
-  waves: Wave[]
-  trucks: Truck[]
+  reps: Rep[]
+  accounts: Account[]
+  products: Product[]
+  visits: Visit[]
+  visitProducts: VisitProduct[]
+  visitEvidences: VisitEvidence[]
+  quoteInquiries: QuoteInquiry[]
+  quoteInquiryLines: QuoteInquiryLine[]
+  visitPlans: VisitPlan[]
   users: User[]
-  exceptions: Exception[]
-  pods: POD[]
 }
 
-export interface ConfirmOrdersInput {
-  orderIds: string[]
+export interface LogVisitInput {
+  repId: string
+  accountId: string
+  visitPlanId?: string
+  outcome: VisitOutcome
+  note: string
+  productIds?: string[]
 }
 
-export interface CreateWaveInput {
-  dcId: string
-  dispatchDate: string
-  truckId?: string
-  driverUserId?: string
-  orderIds: string[]
-}
-
-export interface AssignWaveInput {
-  waveId: string
-  truckId?: string
-  driverUserId?: string
-}
-
-export interface DispatchWaveInput {
-  waveId: string
-}
-
-export interface MarkStopArrivedInput {
-  orderId: string
-}
-
-export interface DeliverStopInput {
-  orderId: string
-  lines: Array<{ skuId: string; deliveredQty: number }>
-  podPhotoUrl?: string
-  podSignatureUrl?: string
-  capturedBy: string
-}
-
-export interface ReportExceptionInput {
-  orderId: string
-  reasonCode: import('./types').ExceptionReason
+export interface SubmitQuoteInquiryInput {
+  visitId: string
+  accountId: string
+  repId: string
   note?: string
-  photoUrl?: string
-  createdBy: string
+  lines: Array<{ productId: string; quantity: number; unitPriceIdr: number }>
 }
 
-export interface EditOrderLineInput {
-  orderId: string
-  skuId: string
-  requestedQty: number
-}
-
-export interface RemoveOrderLineInput {
-  orderId: string
-  skuId: string
-}
-
-export interface SubmitStoreOrderInput {
-  orderId: string
+export interface ScheduleVisitInput {
+  repId: string
+  accountId: string
+  plannedDate: string
   note?: string
-}
-
-export interface MarkStoreReceivedInput {
-  orderId: string
-  podPhotoUrl?: string
-  capturedBy: string
-}
-
-export interface UpsertSkuInput {
-  id?: string
-  code: string
-  name: string
-  category: import('./types').SKUCategory
-  default_burn_per_day: number
-  reorder_threshold_days: number
-  unit_price_idr: number
 }
 
 export interface MockState extends MockDataSlice {
@@ -116,57 +67,35 @@ export interface MockState extends MockDataSlice {
   setCurrentScenario: (id: ScenarioId) => void
   resetToScenario: (id: ScenarioId) => void
 
-  // DC Ops actions
-  confirmOrders: (input: ConfirmOrdersInput) => void
-  flagOrderForReview: (orderId: string, reason: string) => void
-  createWave: (input: CreateWaveInput) => string
-  assignWave: (input: AssignWaveInput) => void
-  dispatchWave: (input: DispatchWaveInput) => void
-  rescheduleOrder: (orderId: string, newDate: string) => void
-  reassignOrderToWave: (orderId: string, newWaveId: string) => void
-  closeException: (exceptionId: string) => void
-  closeDay: (dcId: string) => void
-
-  // Driver actions
-  markStopArrived: (input: MarkStopArrivedInput) => void
-  deliverStop: (input: DeliverStopInput) => void
-  reportException: (input: ReportExceptionInput) => void
-
-  // Store actions
-  editOrderLine: (input: EditOrderLineInput) => void
-  removeOrderLine: (input: RemoveOrderLineInput) => void
-  submitStoreOrder: (input: SubmitStoreOrderInput) => void
-  markStoreReceived: (input: MarkStoreReceivedInput) => void
-
-  // Catalog actions
-  upsertSku: (input: UpsertSkuInput) => SKU
-  deleteSku: (skuId: string) => void
+  logVisit: (input: LogVisitInput) => Visit
+  submitQuoteInquiry: (input: SubmitQuoteInquiryInput) => QuoteInquiry
+  updateQuoteStatus: (inquiryId: string, status: QuoteStatus) => void
+  scheduleVisit: (input: ScheduleVisitInput) => VisitPlan
+  cancelVisitPlan: (planId: string) => void
 }
 
 const SCENARIOS: Record<ScenarioId, MockDataSlice> = {
-  'calm-tuesday': calmTuesday,
-  'exception-friday': exceptionFriday,
-  'end-of-month-surge': endOfMonthSurge,
+  'active-tuesday': activeTuesdayScenario,
+  'territory-gap': territoryGapScenario,
 }
+
+const DEFAULT_SCENARIO: ScenarioId = 'active-tuesday'
+const DEFAULT_ROLE: Role = 'supervisor'
 
 function cloneSlice(slice: MockDataSlice): MockDataSlice {
   return {
-    dcs: slice.dcs.map((x) => ({ ...x })),
-    stores: slice.stores.map((x) => ({ ...x })),
-    skus: slice.skus.map((x) => ({ ...x })),
-    inferredStock: slice.inferredStock.map((x) => ({ ...x })),
-    orders: slice.orders.map((x) => ({ ...x })),
-    orderLines: slice.orderLines.map((x) => ({ ...x })),
-    waves: slice.waves.map((x) => ({ ...x, order_ids: [...x.order_ids] })),
-    trucks: slice.trucks.map((x) => ({ ...x })),
+    reps: slice.reps.map((x) => ({ ...x })),
+    accounts: slice.accounts.map((x) => ({ ...x })),
+    products: slice.products.map((x) => ({ ...x })),
+    visits: slice.visits.map((x) => ({ ...x })),
+    visitProducts: slice.visitProducts.map((x) => ({ ...x })),
+    visitEvidences: slice.visitEvidences.map((x) => ({ ...x })),
+    quoteInquiries: slice.quoteInquiries.map((x) => ({ ...x })),
+    quoteInquiryLines: slice.quoteInquiryLines.map((x) => ({ ...x })),
+    visitPlans: slice.visitPlans.map((x) => ({ ...x })),
     users: slice.users.map((x) => ({ ...x })),
-    exceptions: slice.exceptions.map((x) => ({ ...x })),
-    pods: slice.pods.map((x) => ({ ...x })),
   }
 }
-
-const DEFAULT_SCENARIO: ScenarioId = 'calm-tuesday'
-const DEFAULT_ROLE: Role = 'ops-manager'
 
 function nowIso(): string {
   return getDemoNow().toISOString()
@@ -194,419 +123,207 @@ export const useMockStore = create<MockState>((set, get) => ({
     get().resetToScenario(id)
   },
   resetToScenario: (id) => {
-    set({
-      ...cloneSlice(SCENARIOS[id]),
-      currentScenario: id,
-    })
+    set({ ...cloneSlice(SCENARIOS[id]), currentScenario: id })
   },
 
-  confirmOrders: ({ orderIds }) => {
-    const ids = new Set(orderIds)
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        ids.has(o.id) && (o.status === 'submitted' || o.status === 'draft')
-          ? { ...o, status: 'confirmed' as OrderStatus, flagged_reason: undefined }
-          : o,
-      ),
-    }))
-  },
-
-  flagOrderForReview: (orderId, reason) => {
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        o.id === orderId ? { ...o, flagged_reason: reason } : o,
-      ),
-    }))
-  },
-
-  createWave: ({ dcId, dispatchDate, truckId, driverUserId, orderIds }) => {
+  logVisit: ({ repId, accountId, visitPlanId, outcome, note, productIds }) => {
     const state = get()
-    const id = nextId('wave', state.waves)
-    const wave: Wave = {
+    const today = getDemoNow().toISOString().slice(0, 10)
+    const id = nextId('v', state.visits)
+    const visit: Visit = {
       id,
-      dc_id: dcId,
-      dispatch_date: dispatchDate,
-      status: 'building',
-      truck_id: truckId,
-      driver_user_id: driverUserId,
-      order_ids: [...orderIds],
+      rep_id: repId,
+      account_id: accountId,
+      visit_plan_id: visitPlanId,
+      date: today,
+      outcome,
+      note,
+      created_at: nowIso(),
     }
+    const newVisitProducts: VisitProduct[] = (productIds ?? []).map((pid) => ({
+      visit_id: id,
+      product_id: pid,
+      demo_given: true,
+    }))
+    const updatedPlans = visitPlanId
+      ? state.visitPlans.map((p) =>
+          p.id === visitPlanId ? { ...p, status: 'completed' as VisitPlanStatus } : p,
+        )
+      : state.visitPlans
     set({
-      waves: [...state.waves, wave],
-      orders: state.orders.map((o) =>
-        orderIds.includes(o.id) ? { ...o, wave_id: id } : o,
-      ),
+      visits: [visit, ...state.visits],
+      visitProducts: [...state.visitProducts, ...newVisitProducts],
+      visitPlans: updatedPlans,
     })
-    return id
+    return visit
   },
 
-  assignWave: ({ waveId, truckId, driverUserId }) => {
-    set((state) => ({
-      waves: state.waves.map((w) =>
-        w.id === waveId
-          ? {
-              ...w,
-              truck_id: truckId !== undefined ? truckId : w.truck_id,
-              driver_user_id:
-                driverUserId !== undefined ? driverUserId : w.driver_user_id,
-            }
-          : w,
-      ),
-    }))
-  },
-
-  dispatchWave: ({ waveId }) => {
-    set((state) => {
-      const wave = state.waves.find((w) => w.id === waveId)
-      if (!wave) return state
-      const orderIds = new Set(wave.order_ids)
-      return {
-        waves: state.waves.map((w) =>
-          w.id === waveId ? { ...w, status: 'in_transit' as const } : w,
-        ),
-        orders: state.orders.map((o) =>
-          orderIds.has(o.id) && o.status !== 'delivered' && o.status !== 'exception'
-            ? { ...o, status: 'in_transit' as OrderStatus }
-            : o,
-        ),
-      }
-    })
-  },
-
-  rescheduleOrder: (orderId, newDate) => {
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        o.id === orderId
-          ? {
-              ...o,
-              wave_id: undefined,
-              status: 'confirmed' as OrderStatus,
-              note: `Rescheduled to ${newDate}`,
-            }
-          : o,
-      ),
-      waves: state.waves.map((w) => ({
-        ...w,
-        order_ids: w.order_ids.filter((id) => id !== orderId),
-      })),
-    }))
-  },
-
-  reassignOrderToWave: (orderId, newWaveId) => {
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        o.id === orderId ? { ...o, wave_id: newWaveId } : o,
-      ),
-      waves: state.waves.map((w) => {
-        if (w.id === newWaveId) {
-          return w.order_ids.includes(orderId)
-            ? w
-            : { ...w, order_ids: [...w.order_ids, orderId] }
-        }
-        return { ...w, order_ids: w.order_ids.filter((id) => id !== orderId) }
-      }),
-    }))
-  },
-
-  closeException: (exceptionId) => {
-    set((state) => ({
-      exceptions: state.exceptions.filter((e) => e.id !== exceptionId),
-    }))
-  },
-
-  closeDay: (dcId) => {
-    set((state) => {
-      const dcStoreIds = new Set(
-        state.stores.filter((s) => s.home_dc_id === dcId).map((s) => s.id),
-      )
-      return {
-        orders: state.orders.map((o) =>
-          dcStoreIds.has(o.store_id) && o.status === 'delivered'
-            ? { ...o, status: 'closed' as OrderStatus }
-            : o,
-        ),
-      }
-    })
-  },
-
-  markStopArrived: ({ orderId }) => {
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        o.id === orderId ? { ...o, arrived_at: nowIso() } : o,
-      ),
-    }))
-  },
-
-  deliverStop: ({ orderId, lines, podPhotoUrl, podSignatureUrl, capturedBy }) => {
-    set((state) => {
-      const deliveredAt = nowIso()
-      const lineMap = new Map(lines.map((l) => [l.skuId, l.deliveredQty]))
-      const nextLines = state.orderLines.map((line) =>
-        line.order_id === orderId && lineMap.has(line.sku_id)
-          ? { ...line, delivered_qty: lineMap.get(line.sku_id) ?? line.delivered_qty }
-          : line,
-      )
-      const pod: POD = {
-        id: nextId('pod', state.pods),
-        order_id: orderId,
-        photo_url: podPhotoUrl ?? '',
-        signature_url: podSignatureUrl ?? '',
-        captured_by: capturedBy,
-        captured_at: deliveredAt,
-      }
-      return {
-        orders: state.orders.map((o) =>
-          o.id === orderId
-            ? { ...o, status: 'delivered' as OrderStatus, delivered_at: deliveredAt }
-            : o,
-        ),
-        orderLines: nextLines,
-        pods: [...state.pods, pod],
-      }
-    })
-  },
-
-  reportException: ({ orderId, reasonCode, note, photoUrl, createdBy }) => {
-    set((state) => {
-      const exception: Exception = {
-        id: nextId('exc', state.exceptions),
-        order_id: orderId,
-        reason_code: reasonCode,
-        note: note ?? '',
-        photo_url: photoUrl ?? '',
-        created_by: createdBy,
-        created_at: nowIso(),
-      }
-      return {
-        exceptions: [exception, ...state.exceptions],
-        orders: state.orders.map((o) =>
-          o.id === orderId ? { ...o, status: 'exception' as OrderStatus } : o,
-        ),
-      }
-    })
-  },
-
-  editOrderLine: ({ orderId, skuId, requestedQty }) => {
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        o.id === orderId ? { ...o, edited_by_store: true } : o,
-      ),
-      orderLines: state.orderLines.map((l) =>
-        l.order_id === orderId && l.sku_id === skuId
-          ? { ...l, requested_qty: requestedQty }
-          : l,
-      ),
-    }))
-  },
-
-  removeOrderLine: ({ orderId, skuId }) => {
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        o.id === orderId ? { ...o, edited_by_store: true } : o,
-      ),
-      orderLines: state.orderLines.filter(
-        (l) => !(l.order_id === orderId && l.sku_id === skuId),
-      ),
-    }))
-  },
-
-  submitStoreOrder: ({ orderId, note }) => {
-    set((state) => ({
-      orders: state.orders.map((o) =>
-        o.id === orderId
-          ? {
-              ...o,
-              status: 'submitted' as OrderStatus,
-              note: note ?? o.note,
-              source: 'store',
-            }
-          : o,
-      ),
-    }))
-  },
-
-  markStoreReceived: ({ orderId, podPhotoUrl, capturedBy }) => {
-    set((state) => {
-      const pod: POD = {
-        id: nextId('pod-store', state.pods),
-        order_id: orderId,
-        photo_url: podPhotoUrl ?? '',
-        signature_url: '',
-        captured_by: capturedBy,
-        captured_at: nowIso(),
-      }
-      return {
-        orders: state.orders.map((o) =>
-          o.id === orderId
-            ? { ...o, status: 'delivered' as OrderStatus, delivered_at: nowIso() }
-            : o,
-        ),
-        pods: [...state.pods, pod],
-      }
-    })
-  },
-
-  upsertSku: (input) => {
+  submitQuoteInquiry: ({ visitId, accountId, repId, note, lines }) => {
     const state = get()
-    if (input.id) {
-      const existing = state.skus.find((s) => s.id === input.id)
-      if (existing) {
-        const updated: SKU = { ...existing, ...input, id: existing.id }
-        set({
-          skus: state.skus.map((s) => (s.id === existing.id ? updated : s)),
-        })
-        return updated
-      }
-    }
-    const id = input.id ?? nextId('sku', state.skus)
-    const created: SKU = {
+    const id = nextId('qi', state.quoteInquiries)
+    const total_idr = lines.reduce((sum, l) => sum + l.quantity * l.unitPriceIdr, 0)
+    const inquiry: QuoteInquiry = {
       id,
-      code: input.code,
-      name: input.name,
-      category: input.category,
-      default_burn_per_day: input.default_burn_per_day,
-      reorder_threshold_days: input.reorder_threshold_days,
-      unit_price_idr: input.unit_price_idr,
+      visit_id: visitId,
+      account_id: accountId,
+      rep_id: repId,
+      status: 'new',
+      total_idr,
+      created_at: nowIso(),
+      note,
     }
-    set({ skus: [...state.skus, created] })
-    return created
+    const newLines: QuoteInquiryLine[] = lines.map((l) => ({
+      inquiry_id: id,
+      product_id: l.productId,
+      quantity: l.quantity,
+      unit_price_idr: l.unitPriceIdr,
+    }))
+    set({
+      quoteInquiries: [inquiry, ...state.quoteInquiries],
+      quoteInquiryLines: [...state.quoteInquiryLines, ...newLines],
+    })
+    return inquiry
   },
 
-  deleteSku: (skuId) => {
+  updateQuoteStatus: (inquiryId, status) => {
     set((state) => ({
-      skus: state.skus.filter((s) => s.id !== skuId),
+      quoteInquiries: state.quoteInquiries.map((q) =>
+        q.id === inquiryId ? { ...q, status } : q,
+      ),
+    }))
+  },
+
+  scheduleVisit: ({ repId, accountId, plannedDate, note }) => {
+    const state = get()
+    const id = nextId('vp', state.visitPlans)
+    const plan: VisitPlan = {
+      id,
+      rep_id: repId,
+      account_id: accountId,
+      planned_date: plannedDate,
+      note,
+      status: 'pending',
+    }
+    set({ visitPlans: [plan, ...state.visitPlans] })
+    return plan
+  },
+
+  cancelVisitPlan: (planId) => {
+    set((state) => ({
+      visitPlans: state.visitPlans.map((p) =>
+        p.id === planId ? { ...p, status: 'cancelled' as VisitPlanStatus } : p,
+      ),
     }))
   },
 }))
 
-export function selectStoresForDC(state: MockState, dcId: string): Store[] {
-  return state.stores.filter((s) => s.home_dc_id === dcId)
+export function selectRepById(state: MockState, id: string): Rep | undefined {
+  return state.reps.find((r) => r.id === id)
 }
 
-export function selectOrdersByStatus(state: MockState, status: OrderStatus): Order[] {
-  return state.orders.filter((o) => o.status === status)
+export function selectAccountById(state: MockState, id: string): Account | undefined {
+  return state.accounts.find((a) => a.id === id)
 }
 
-export function selectExceptionsToday(state: MockState): Exception[] {
-  const now = getDemoNow()
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
-  return state.exceptions.filter((e) => new Date(e.created_at).getTime() >= startOfDay)
+export function selectProductById(state: MockState, id: string): Product | undefined {
+  return state.products.find((p) => p.id === id)
 }
 
-export function selectStoreById(state: MockState, id: string): Store | undefined {
-  return state.stores.find((s) => s.id === id)
+export function selectVisitsForRep(state: MockState, repId: string): Visit[] {
+  return state.visits.filter((v) => v.rep_id === repId)
 }
 
-export function selectOrderById(state: MockState, id: string): Order | undefined {
-  return state.orders.find((o) => o.id === id)
+export function selectVisitsForAccount(state: MockState, accountId: string): Visit[] {
+  return state.visits.filter((v) => v.account_id === accountId)
 }
 
-export function selectOrderLines(state: MockState, orderId: string): OrderLine[] {
-  return state.orderLines.filter((l) => l.order_id === orderId)
+export function selectQuotesForAccount(state: MockState, accountId: string): QuoteInquiry[] {
+  return state.quoteInquiries.filter((q) => q.account_id === accountId)
 }
 
-export function selectOrdersForStore(state: MockState, storeId: string): Order[] {
-  return state.orders.filter((o) => o.store_id === storeId)
+export function selectQuotesForRep(state: MockState, repId: string): QuoteInquiry[] {
+  return state.quoteInquiries.filter((q) => q.rep_id === repId)
 }
 
-export function selectDraftOrderForStore(
+export function selectVisitPlansForRep(
   state: MockState,
-  storeId: string,
-): Order | undefined {
-  return state.orders.find((o) => o.store_id === storeId && o.status === 'draft')
-}
-
-export function selectWavesForDC(
-  state: MockState,
-  dcId: string,
+  repId: string,
   date?: string,
-): Wave[] {
-  return state.waves.filter(
-    (w) => w.dc_id === dcId && (date ? w.dispatch_date === date : true),
+): VisitPlan[] {
+  return state.visitPlans.filter(
+    (p) => p.rep_id === repId && (date ? p.planned_date === date : true),
   )
 }
 
-export function selectWaveById(state: MockState, id: string): Wave | undefined {
-  return state.waves.find((w) => w.id === id)
-}
-
-export function selectOrdersForWave(state: MockState, waveId: string): Order[] {
-  const wave = state.waves.find((w) => w.id === waveId)
-  if (!wave) return []
-  const set = new Set(wave.order_ids)
-  return state.orders.filter((o) => set.has(o.id))
-}
-
-export function selectRouteForDriver(
+export function selectVisitProductsForVisit(
   state: MockState,
-  driverUserId: string,
-  date?: string,
-): { wave: Wave; orders: Order[] } | undefined {
-  const wave = state.waves.find(
-    (w) =>
-      w.driver_user_id === driverUserId &&
-      (date ? w.dispatch_date === date : w.status !== 'completed'),
-  )
-  if (!wave) return undefined
-  return { wave, orders: selectOrdersForWave(state, wave.id) }
+  visitId: string,
+): VisitProduct[] {
+  return state.visitProducts.filter((vp) => vp.visit_id === visitId)
 }
 
-export function selectStoresForCluster(
+export function selectEvidenceForVisit(
   state: MockState,
-  clusterId: string,
-): Store[] {
-  return state.stores.filter((s) => s.cluster_id === clusterId)
+  visitId: string,
+): VisitEvidence[] {
+  return state.visitEvidences.filter((ve) => ve.visit_id === visitId)
 }
 
-export function selectExceptionsForCluster(
+export function selectActiveRepsToday(state: MockState): Rep[] {
+  const today = getDemoNow().toISOString().slice(0, 10)
+  const activeRepIds = new Set<string>()
+  for (const v of state.visits) {
+    if (v.date === today) activeRepIds.add(v.rep_id)
+  }
+  for (const p of state.visitPlans) {
+    if (p.planned_date === today && p.status === 'pending') activeRepIds.add(p.rep_id)
+  }
+  return state.reps.filter((r) => activeRepIds.has(r.id))
+}
+
+export function selectAccountsWithNoRecentVisit(
   state: MockState,
-  clusterId: string,
-): Exception[] {
-  const storeIds = new Set(
-    state.stores.filter((s) => s.cluster_id === clusterId).map((s) => s.id),
+  days: number,
+): Account[] {
+  const cutoff = new Date(getDemoNow().getTime() - days * 24 * 60 * 60 * 1000)
+  const recentlyVisited = new Set(
+    state.visits
+      .filter((v) => new Date(v.date) >= cutoff)
+      .map((v) => v.account_id),
   )
-  const orderIds = new Set(
-    state.orders.filter((o) => storeIds.has(o.store_id)).map((o) => o.id),
-  )
-  return state.exceptions.filter((e) => orderIds.has(e.order_id))
+  return state.accounts.filter((a) => !recentlyVisited.has(a.id))
 }
 
-export function selectSkuById(state: MockState, id: string): SKU | undefined {
-  return state.skus.find((s) => s.id === id)
-}
-
-export function selectInferredStockForStore(
+export function selectRepVisitCount(
   state: MockState,
-  storeId: string,
-): InferredStock[] {
-  return state.inferredStock.filter((i) => i.store_id === storeId)
+  repId: string,
+  days: number,
+): number {
+  const cutoff = new Date(getDemoNow().getTime() - days * 24 * 60 * 60 * 1000)
+  return state.visits.filter(
+    (v) => v.rep_id === repId && new Date(v.date) >= cutoff,
+  ).length
 }
 
-export function selectClustersForDC(state: MockState, dcId: string): string[] {
-  const clusters = new Set(
-    state.stores.filter((s) => s.home_dc_id === dcId).map((s) => s.cluster_id),
-  )
-  return Array.from(clusters).sort()
+export function selectLinesForQuote(
+  state: MockState,
+  inquiryId: string,
+): QuoteInquiryLine[] {
+  return state.quoteInquiryLines.filter((l) => l.inquiry_id === inquiryId)
 }
 
 export function selectKpiForPeriod(
-  _state: MockState,
+  state: MockState,
   period: 'today' | '7d' | '30d',
-): {
-  stockOutRatePct: number
-  onTimePct: number
-  acceptancePct: number
-  avgCycleHours: number
-} {
-  const factor = period === 'today' ? 1 : period === '7d' ? 1.1 : 1.18
-  const baseStockOut = 4.2
-  const baseOnTime = 92.4
-  const baseAcceptance = 78.5
-  const baseCycle = 28.3
-  return {
-    stockOutRatePct: Math.round(baseStockOut * factor * 10) / 10,
-    onTimePct: Math.round((baseOnTime / factor) * 10) / 10,
-    acceptancePct: Math.round((baseAcceptance / factor) * 10) / 10,
-    avgCycleHours: Math.round(baseCycle * factor * 10) / 10,
+): KpiSlice {
+  const base = kpis[period]
+  if (state.currentScenario === 'territory-gap') {
+    return {
+      ...base,
+      active_reps: Math.max(1, base.active_reps - 1),
+      visits_completed: Math.max(0, base.visits_completed - 2),
+      accounts_covered: Math.max(0, base.accounts_covered - 2),
+    }
   }
+  return base
 }

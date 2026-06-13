@@ -11,11 +11,9 @@ import { useMockStore } from "@/mocks/state"
 import type { Role } from "@/mocks/types"
 
 const ROLES: { id: Role; persona: string; title: string; home: string }[] = [
-  { id: "ops-manager", persona: "Rina", title: "DC Ops Manager", home: "/" },
-  { id: "supervisor", persona: "Sari", title: "Regional Supervisor", home: "/supervisor" },
-  { id: "exec", persona: "Pak Hadi", title: "Head of Supply Chain", home: "/exec" },
-  { id: "store", persona: "Budi", title: "Store Owner", home: "/store" },
-  { id: "driver", persona: "Andi", title: "Driver", home: "/driver" },
+  { id: "supervisor", persona: "Dewi", title: "Regional Supervisor", home: "/supervisor" },
+  { id: "admin", persona: "Bima", title: "Admin", home: "/admin" },
+  { id: "exec", persona: "Pak Arief", title: "Head of Field Sales", home: "/exec" },
 ]
 
 export function RoleSwitcher() {
@@ -29,15 +27,14 @@ export function RoleSwitcher() {
       value={role}
       onValueChange={(value) => {
         if (!value) return
-        setRole(value)
+        setRole(value as Role)
         const next = ROLES.find((r) => r.id === value)
-        if (next) navigate({ to: next.home })
+        if (next) navigate({ to: next.home } as never)
       }}
     >
-      <SelectTrigger size="sm" aria-label="Switch persona" className="min-w-52">
+      <SelectTrigger size="sm" aria-label="Switch persona">
         <SelectValue>
           <span className="font-medium">{current.persona}</span>
-          <span className="text-muted-foreground">, {current.title}</span>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>

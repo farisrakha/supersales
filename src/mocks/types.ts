@@ -1,129 +1,113 @@
-export type Role = 'ops-manager' | 'store' | 'driver' | 'supervisor' | 'exec'
+export type Role = 'supervisor' | 'admin' | 'exec'
 
-export type ScenarioId = 'calm-tuesday' | 'exception-friday' | 'end-of-month-surge'
+export type ScenarioId = 'active-tuesday' | 'territory-gap'
 
-export type OrderStatus =
-  | 'draft'
-  | 'submitted'
-  | 'confirmed'
-  | 'picking'
-  | 'picked'
-  | 'in_transit'
-  | 'delivered'
-  | 'exception'
-  | 'closed'
+export type Industry = 'automotive' | 'electronics' | 'food_processing' | 'pharmaceutical'
 
-export type ExceptionReason =
-  | 'store_closed'
-  | 'refused'
-  | 'damaged'
-  | 'address_wrong'
-  | 'other'
+export type VisitOutcome = 'interested' | 'not_interested' | 'quote_submitted'
 
-export type OrderSource = 'engine' | 'store' | 'manual'
+export type QuoteStatus = 'new' | 'reviewing' | 'forwarded' | 'closed'
 
-export type WaveStatus = 'building' | 'dispatched' | 'in_transit' | 'completed'
+export type ProductCategory =
+  | 'laser_profiler'
+  | 'vision_system'
+  | 'measurement'
+  | 'barcode_reader'
+  | 'fiber_sensor'
+  | 'displacement_sensor'
 
-export type SKUCategory = 'snacks' | 'beverages' | 'toiletries'
+export type VisitPlanStatus = 'pending' | 'completed' | 'cancelled'
 
-export interface DC {
+export interface Rep {
   id: string
   name: string
-  address: string
-  region: string
+  territory: string
+  phone: string
 }
 
-export interface Store {
+export interface Account {
   id: string
   name: string
+  industry: Industry
   address: string
-  contact: string
-  home_dc_id: string
-  cluster_id: string
+  city: string
+  area: string
+  contact_name: string
+  contact_phone: string
+  assigned_rep_id: string
 }
 
-export interface SKU {
+export interface Product {
   id: string
   code: string
   name: string
-  category: SKUCategory
-  default_burn_per_day: number
-  reorder_threshold_days: number
+  category: ProductCategory
+  demo_units_available: number
   unit_price_idr: number
 }
 
-export interface InferredStock {
-  store_id: string
-  sku_id: string
-  on_hand_estimate: number
-  last_recompute_at: string
-  days_of_cover: number
-}
-
-export interface OrderLine {
-  order_id: string
-  sku_id: string
-  suggested_qty: number
-  requested_qty: number
-  delivered_qty: number
-}
-
-export interface Order {
+export interface VisitPlan {
   id: string
-  store_id: string
-  status: OrderStatus
-  created_at: string
-  source: OrderSource
-  wave_id?: string
-  edited_by_store?: boolean
+  rep_id: string
+  account_id: string
+  planned_date: string
   note?: string
-  arrived_at?: string
-  delivered_at?: string
-  flagged_reason?: string
+  status: VisitPlanStatus
 }
 
-export interface Wave {
+export interface Visit {
   id: string
-  dc_id: string
-  dispatch_date: string
-  status: WaveStatus
-  truck_id?: string
-  driver_user_id?: string
-  order_ids: string[]
+  rep_id: string
+  account_id: string
+  visit_plan_id?: string
+  date: string
+  outcome: VisitOutcome
+  note: string
+  created_at: string
 }
 
-export interface Truck {
+export interface VisitProduct {
+  visit_id: string
+  product_id: string
+  demo_given: boolean
+}
+
+export interface VisitEvidence {
   id: string
-  dc_id: string
-  plate: string
-  capacity: number
+  visit_id: string
+  photo_url: string
+  caption: string
+}
+
+export interface QuoteInquiry {
+  id: string
+  visit_id: string
+  account_id: string
+  rep_id: string
+  status: QuoteStatus
+  total_idr: number
+  created_at: string
+  note?: string
+}
+
+export interface QuoteInquiryLine {
+  inquiry_id: string
+  product_id: string
+  quantity: number
+  unit_price_idr: number
 }
 
 export interface User {
   id: string
   role: Role
   name: string
-  phone: string
-  dc_id?: string
-  store_id?: string
-  cluster_id?: string
 }
 
-export interface Exception {
-  id: string
-  order_id: string
-  reason_code: ExceptionReason
-  note: string
-  photo_url: string
-  created_by: string
-  created_at: string
-}
-
-export interface POD {
-  id: string
-  order_id: string
-  photo_url: string
-  signature_url: string
-  captured_by: string
-  captured_at: string
+export interface KpiSlice {
+  visits_completed: number
+  quote_inquiries_raised: number
+  quote_value_idr: number
+  active_reps: number
+  accounts_covered: number
+  avg_visits_per_rep: number
 }
