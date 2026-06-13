@@ -9,48 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SuggestedOrdersRouteImport } from './routes/suggested-orders'
-import { Route as StoresRouteImport } from './routes/stores'
-import { Route as ReconciliationRouteImport } from './routes/reconciliation'
-import { Route as InTransitRouteImport } from './routes/in-transit'
 import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as SupervisorRouteRouteImport } from './routes/supervisor/route'
-import { Route as StoreRouteRouteImport } from './routes/store/route'
 import { Route as ExecRouteRouteImport } from './routes/exec/route'
-import { Route as DriverRouteRouteImport } from './routes/driver/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SupervisorIndexRouteImport } from './routes/supervisor/index'
-import { Route as StoreIndexRouteImport } from './routes/store/index'
 import { Route as ExecIndexRouteImport } from './routes/exec/index'
-import { Route as DriverIndexRouteImport } from './routes/driver/index'
-import { Route as StoreLoginRouteImport } from './routes/store/login'
-import { Route as StoreHistoryRouteImport } from './routes/store/history'
-import { Route as StoreDraftRouteImport } from './routes/store/draft'
-import { Route as DriverLoginRouteImport } from './routes/driver/login'
-import { Route as StoreReceiveOrderIdRouteImport } from './routes/store/receive.$orderId'
-import { Route as DriverStopStopIdRouteImport } from './routes/driver/stop.$stopId'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 
-const SuggestedOrdersRoute = SuggestedOrdersRouteImport.update({
-  id: '/suggested-orders',
-  path: '/suggested-orders',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StoresRoute = StoresRouteImport.update({
-  id: '/stores',
-  path: '/stores',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReconciliationRoute = ReconciliationRouteImport.update({
-  id: '/reconciliation',
-  path: '/reconciliation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InTransitRoute = InTransitRouteImport.update({
-  id: '/in-transit',
-  path: '/in-transit',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DispatchRoute = DispatchRouteImport.update({
   id: '/dispatch',
   path: '/dispatch',
@@ -66,19 +33,9 @@ const SupervisorRouteRoute = SupervisorRouteRouteImport.update({
   path: '/supervisor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StoreRouteRoute = StoreRouteRouteImport.update({
-  id: '/store',
-  path: '/store',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ExecRouteRoute = ExecRouteRouteImport.update({
   id: '/exec',
   path: '/exec',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DriverRouteRoute = DriverRouteRouteImport.update({
-  id: '/driver',
-  path: '/driver',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -91,230 +48,82 @@ const SupervisorIndexRoute = SupervisorIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SupervisorRouteRoute,
 } as any)
-const StoreIndexRoute = StoreIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StoreRouteRoute,
-} as any)
 const ExecIndexRoute = ExecIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ExecRouteRoute,
 } as any)
-const DriverIndexRoute = DriverIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DriverRouteRoute,
-} as any)
-const StoreLoginRoute = StoreLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => StoreRouteRoute,
-} as any)
-const StoreHistoryRoute = StoreHistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
-  getParentRoute: () => StoreRouteRoute,
-} as any)
-const StoreDraftRoute = StoreDraftRouteImport.update({
-  id: '/draft',
-  path: '/draft',
-  getParentRoute: () => StoreRouteRoute,
-} as any)
-const DriverLoginRoute = DriverLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => DriverRouteRoute,
-} as any)
-const StoreReceiveOrderIdRoute = StoreReceiveOrderIdRouteImport.update({
-  id: '/receive/$orderId',
-  path: '/receive/$orderId',
-  getParentRoute: () => StoreRouteRoute,
-} as any)
-const DriverStopStopIdRoute = DriverStopStopIdRouteImport.update({
-  id: '/stop/$stopId',
-  path: '/stop/$stopId',
-  getParentRoute: () => DriverRouteRoute,
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/driver': typeof DriverRouteRouteWithChildren
   '/exec': typeof ExecRouteRouteWithChildren
-  '/store': typeof StoreRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
   '/catalog': typeof CatalogRoute
   '/dispatch': typeof DispatchRoute
-  '/in-transit': typeof InTransitRoute
-  '/reconciliation': typeof ReconciliationRoute
-  '/stores': typeof StoresRoute
-  '/suggested-orders': typeof SuggestedOrdersRoute
-  '/driver/login': typeof DriverLoginRoute
-  '/store/draft': typeof StoreDraftRoute
-  '/store/history': typeof StoreHistoryRoute
-  '/store/login': typeof StoreLoginRoute
-  '/driver/': typeof DriverIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
-  '/store/': typeof StoreIndexRoute
   '/supervisor/': typeof SupervisorIndexRoute
-  '/driver/stop/$stopId': typeof DriverStopStopIdRoute
-  '/store/receive/$orderId': typeof StoreReceiveOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/catalog': typeof CatalogRoute
   '/dispatch': typeof DispatchRoute
-  '/in-transit': typeof InTransitRoute
-  '/reconciliation': typeof ReconciliationRoute
-  '/stores': typeof StoresRoute
-  '/suggested-orders': typeof SuggestedOrdersRoute
-  '/driver/login': typeof DriverLoginRoute
-  '/store/draft': typeof StoreDraftRoute
-  '/store/history': typeof StoreHistoryRoute
-  '/store/login': typeof StoreLoginRoute
-  '/driver': typeof DriverIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/exec': typeof ExecIndexRoute
-  '/store': typeof StoreIndexRoute
   '/supervisor': typeof SupervisorIndexRoute
-  '/driver/stop/$stopId': typeof DriverStopStopIdRoute
-  '/store/receive/$orderId': typeof StoreReceiveOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/driver': typeof DriverRouteRouteWithChildren
   '/exec': typeof ExecRouteRouteWithChildren
-  '/store': typeof StoreRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
   '/catalog': typeof CatalogRoute
   '/dispatch': typeof DispatchRoute
-  '/in-transit': typeof InTransitRoute
-  '/reconciliation': typeof ReconciliationRoute
-  '/stores': typeof StoresRoute
-  '/suggested-orders': typeof SuggestedOrdersRoute
-  '/driver/login': typeof DriverLoginRoute
-  '/store/draft': typeof StoreDraftRoute
-  '/store/history': typeof StoreHistoryRoute
-  '/store/login': typeof StoreLoginRoute
-  '/driver/': typeof DriverIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/exec/': typeof ExecIndexRoute
-  '/store/': typeof StoreIndexRoute
   '/supervisor/': typeof SupervisorIndexRoute
-  '/driver/stop/$stopId': typeof DriverStopStopIdRoute
-  '/store/receive/$orderId': typeof StoreReceiveOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/driver'
     | '/exec'
-    | '/store'
     | '/supervisor'
     | '/catalog'
     | '/dispatch'
-    | '/in-transit'
-    | '/reconciliation'
-    | '/stores'
-    | '/suggested-orders'
-    | '/driver/login'
-    | '/store/draft'
-    | '/store/history'
-    | '/store/login'
-    | '/driver/'
+    | '/admin/'
     | '/exec/'
-    | '/store/'
     | '/supervisor/'
-    | '/driver/stop/$stopId'
-    | '/store/receive/$orderId'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/catalog'
-    | '/dispatch'
-    | '/in-transit'
-    | '/reconciliation'
-    | '/stores'
-    | '/suggested-orders'
-    | '/driver/login'
-    | '/store/draft'
-    | '/store/history'
-    | '/store/login'
-    | '/driver'
-    | '/exec'
-    | '/store'
-    | '/supervisor'
-    | '/driver/stop/$stopId'
-    | '/store/receive/$orderId'
+  to: '/' | '/catalog' | '/dispatch' | '/admin' | '/exec' | '/supervisor'
   id:
     | '__root__'
     | '/'
-    | '/driver'
     | '/exec'
-    | '/store'
     | '/supervisor'
     | '/catalog'
     | '/dispatch'
-    | '/in-transit'
-    | '/reconciliation'
-    | '/stores'
-    | '/suggested-orders'
-    | '/driver/login'
-    | '/store/draft'
-    | '/store/history'
-    | '/store/login'
-    | '/driver/'
+    | '/admin/'
     | '/exec/'
-    | '/store/'
     | '/supervisor/'
-    | '/driver/stop/$stopId'
-    | '/store/receive/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DriverRouteRoute: typeof DriverRouteRouteWithChildren
   ExecRouteRoute: typeof ExecRouteRouteWithChildren
-  StoreRouteRoute: typeof StoreRouteRouteWithChildren
   SupervisorRouteRoute: typeof SupervisorRouteRouteWithChildren
   CatalogRoute: typeof CatalogRoute
   DispatchRoute: typeof DispatchRoute
-  InTransitRoute: typeof InTransitRoute
-  ReconciliationRoute: typeof ReconciliationRoute
-  StoresRoute: typeof StoresRoute
-  SuggestedOrdersRoute: typeof SuggestedOrdersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/suggested-orders': {
-      id: '/suggested-orders'
-      path: '/suggested-orders'
-      fullPath: '/suggested-orders'
-      preLoaderRoute: typeof SuggestedOrdersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/stores': {
-      id: '/stores'
-      path: '/stores'
-      fullPath: '/stores'
-      preLoaderRoute: typeof StoresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reconciliation': {
-      id: '/reconciliation'
-      path: '/reconciliation'
-      fullPath: '/reconciliation'
-      preLoaderRoute: typeof ReconciliationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/in-transit': {
-      id: '/in-transit'
-      path: '/in-transit'
-      fullPath: '/in-transit'
-      preLoaderRoute: typeof InTransitRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dispatch': {
       id: '/dispatch'
       path: '/dispatch'
@@ -336,25 +145,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupervisorRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/store': {
-      id: '/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof StoreRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/exec': {
       id: '/exec'
       path: '/exec'
       fullPath: '/exec'
       preLoaderRoute: typeof ExecRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/driver': {
-      id: '/driver'
-      path: '/driver'
-      fullPath: '/driver'
-      preLoaderRoute: typeof DriverRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -371,13 +166,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupervisorIndexRouteImport
       parentRoute: typeof SupervisorRouteRoute
     }
-    '/store/': {
-      id: '/store/'
-      path: '/'
-      fullPath: '/store/'
-      preLoaderRoute: typeof StoreIndexRouteImport
-      parentRoute: typeof StoreRouteRoute
-    }
     '/exec/': {
       id: '/exec/'
       path: '/'
@@ -385,73 +173,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExecIndexRouteImport
       parentRoute: typeof ExecRouteRoute
     }
-    '/driver/': {
-      id: '/driver/'
-      path: '/'
-      fullPath: '/driver/'
-      preLoaderRoute: typeof DriverIndexRouteImport
-      parentRoute: typeof DriverRouteRoute
-    }
-    '/store/login': {
-      id: '/store/login'
-      path: '/login'
-      fullPath: '/store/login'
-      preLoaderRoute: typeof StoreLoginRouteImport
-      parentRoute: typeof StoreRouteRoute
-    }
-    '/store/history': {
-      id: '/store/history'
-      path: '/history'
-      fullPath: '/store/history'
-      preLoaderRoute: typeof StoreHistoryRouteImport
-      parentRoute: typeof StoreRouteRoute
-    }
-    '/store/draft': {
-      id: '/store/draft'
-      path: '/draft'
-      fullPath: '/store/draft'
-      preLoaderRoute: typeof StoreDraftRouteImport
-      parentRoute: typeof StoreRouteRoute
-    }
-    '/driver/login': {
-      id: '/driver/login'
-      path: '/login'
-      fullPath: '/driver/login'
-      preLoaderRoute: typeof DriverLoginRouteImport
-      parentRoute: typeof DriverRouteRoute
-    }
-    '/store/receive/$orderId': {
-      id: '/store/receive/$orderId'
-      path: '/receive/$orderId'
-      fullPath: '/store/receive/$orderId'
-      preLoaderRoute: typeof StoreReceiveOrderIdRouteImport
-      parentRoute: typeof StoreRouteRoute
-    }
-    '/driver/stop/$stopId': {
-      id: '/driver/stop/$stopId'
-      path: '/stop/$stopId'
-      fullPath: '/driver/stop/$stopId'
-      preLoaderRoute: typeof DriverStopStopIdRouteImport
-      parentRoute: typeof DriverRouteRoute
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface DriverRouteRouteChildren {
-  DriverLoginRoute: typeof DriverLoginRoute
-  DriverIndexRoute: typeof DriverIndexRoute
-  DriverStopStopIdRoute: typeof DriverStopStopIdRoute
-}
-
-const DriverRouteRouteChildren: DriverRouteRouteChildren = {
-  DriverLoginRoute: DriverLoginRoute,
-  DriverIndexRoute: DriverIndexRoute,
-  DriverStopStopIdRoute: DriverStopStopIdRoute,
-}
-
-const DriverRouteRouteWithChildren = DriverRouteRoute._addFileChildren(
-  DriverRouteRouteChildren,
-)
 
 interface ExecRouteRouteChildren {
   ExecIndexRoute: typeof ExecIndexRoute
@@ -463,26 +193,6 @@ const ExecRouteRouteChildren: ExecRouteRouteChildren = {
 
 const ExecRouteRouteWithChildren = ExecRouteRoute._addFileChildren(
   ExecRouteRouteChildren,
-)
-
-interface StoreRouteRouteChildren {
-  StoreDraftRoute: typeof StoreDraftRoute
-  StoreHistoryRoute: typeof StoreHistoryRoute
-  StoreLoginRoute: typeof StoreLoginRoute
-  StoreIndexRoute: typeof StoreIndexRoute
-  StoreReceiveOrderIdRoute: typeof StoreReceiveOrderIdRoute
-}
-
-const StoreRouteRouteChildren: StoreRouteRouteChildren = {
-  StoreDraftRoute: StoreDraftRoute,
-  StoreHistoryRoute: StoreHistoryRoute,
-  StoreLoginRoute: StoreLoginRoute,
-  StoreIndexRoute: StoreIndexRoute,
-  StoreReceiveOrderIdRoute: StoreReceiveOrderIdRoute,
-}
-
-const StoreRouteRouteWithChildren = StoreRouteRoute._addFileChildren(
-  StoreRouteRouteChildren,
 )
 
 interface SupervisorRouteRouteChildren {
@@ -499,16 +209,11 @@ const SupervisorRouteRouteWithChildren = SupervisorRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DriverRouteRoute: DriverRouteRouteWithChildren,
   ExecRouteRoute: ExecRouteRouteWithChildren,
-  StoreRouteRoute: StoreRouteRouteWithChildren,
   SupervisorRouteRoute: SupervisorRouteRouteWithChildren,
   CatalogRoute: CatalogRoute,
   DispatchRoute: DispatchRoute,
-  InTransitRoute: InTransitRoute,
-  ReconciliationRoute: ReconciliationRoute,
-  StoresRoute: StoresRoute,
-  SuggestedOrdersRoute: SuggestedOrdersRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
