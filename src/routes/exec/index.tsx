@@ -193,8 +193,17 @@ function ExecOverview() {
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
-        <Skeleton className="mb-2 h-9 w-64" />
-        <Skeleton className="mb-8 h-4 w-48" />
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <Skeleton className="mb-2 h-9 w-64" />
+            <Skeleton className="h-4 w-48" />
+          </div>
+          <TabsList>
+            <TabsTrigger value="today" disabled>Today</TabsTrigger>
+            <TabsTrigger value="7d" disabled>7 days</TabsTrigger>
+            <TabsTrigger value="30d" disabled>30 days</TabsTrigger>
+          </TabsList>
+        </div>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i} size="sm"><CardContent className="pt-4"><Skeleton className="h-20 w-full" /></CardContent></Card>
