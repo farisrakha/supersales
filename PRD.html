@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PRD: kdmp Retail Modern Fulfillment OS (v1 Mockup)</title>
+<style>
+  :root {
+    --fg: #0f172a;
+    --muted: #475569;
+    --subtle: #64748b;
+    --line: #e2e8f0;
+    --line-strong: #cbd5e1;
+    --bg: #ffffff;
+    --panel: #f8fafc;
+    --accent: #1d4ed8;
+    --accent-soft: #eff6ff;
+    --good: #047857;
+    --good-soft: #ecfdf5;
+    --warn: #b45309;
+    --warn-soft: #fffbeb;
+    --bad: #b91c1c;
+    --bad-soft: #fef2f2;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    margin: 0;
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 64px 32px 96px;
+  }
+  header.cover {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+    color: var(--subtle);
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 38px;
+    line-height: 1.15;
+    margin: 8px 0 6px;
+    letter-spacing: -0.02em;
+  }
+  h2 {
+    font-size: 24px;
+    margin: 56px 0 12px;
+    letter-spacing: -0.01em;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 {
+    font-size: 18px;
+    margin: 32px 0 8px;
+    letter-spacing: -0.005em;
+  }
+  h4 {
+    font-size: 14px;
+    margin: 20px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  p { margin: 10px 0; max-width: 70ch; }
+  ul, ol { padding-left: 22px; margin: 8px 0; max-width: 70ch; }
+  li { margin: 4px 0; }
+  .lede { color: var(--muted); font-size: 17px; max-width: 65ch; }
+  .meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 18px;
+    row-gap: 6px;
+    font-size: 13px;
+    margin-top: 18px;
+    color: var(--muted);
+  }
+  .meta dt { color: var(--subtle); }
+  .meta dd { margin: 0; color: var(--fg); }
+  code, kbd, .mono {
+    font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 13.5px;
+  }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: var(--panel);
+    font-size: 12px;
+    color: var(--muted);
+    margin-right: 6px;
+  }
+  .pill.good { background: var(--good-soft); border-color: #a7f3d0; color: var(--good); }
+  .pill.warn { background: var(--warn-soft); border-color: #fde68a; color: var(--warn); }
+  .pill.bad { background: var(--bad-soft); border-color: #fecaca; color: var(--bad); }
+  .pill.accent { background: var(--accent-soft); border-color: #bfdbfe; color: var(--accent); }
+  .callout {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 18px 0;
+    max-width: 70ch;
+  }
+  .callout.accent {
+    background: var(--accent-soft);
+    border-color: #bfdbfe;
+  }
+  .callout.warn {
+    background: var(--warn-soft);
+    border-color: #fde68a;
+  }
+  .callout h4 { margin-top: 0; color: inherit; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 8px;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    background: var(--panel);
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  tr:last-child td { border-bottom: none; }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--bg);
+  }
+  .card h4 { margin: 0 0 6px; color: var(--fg); text-transform: none; letter-spacing: 0; font-size: 15px; font-weight: 600; }
+  .card .role { color: var(--muted); font-size: 13px; }
+  .toc { columns: 2; column-gap: 32px; font-size: 14px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .nav-li { break-inside: avoid; margin: 3px 0; }
+  .num { color: var(--subtle); margin-right: 6px; font-variant-numeric: tabular-nums; }
+  .req-id {
+    font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+    color: var(--accent);
+    font-size: 12px;
+    padding: 1px 6px;
+    background: var(--accent-soft);
+    border-radius: 4px;
+  }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+  .small { font-size: 13px; color: var(--muted); }
+  blockquote {
+    margin: 14px 0;
+    padding: 8px 16px;
+    border-left: 3px solid var(--line-strong);
+    color: var(--muted);
+    font-style: italic;
+    max-width: 65ch;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    margin: 4px 0 8px;
+    flex-wrap: wrap;
+  }
+  .surface-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .banner {
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 24px 0 32px;
+  }
+  .banner span { font-weight: 500; color: #1e3a8a; }
+  @media print {
+    .wrap { padding: 24px; max-width: none; }
+    h2 { page-break-before: auto; }
+    .callout, .card, table { page-break-inside: avoid; }
+  }
+  @media (max-width: 720px) {
+    .wrap { padding: 32px 18px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .toc { columns: 1; }
+    h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="cover">
+  <div class="eyebrow">Product Requirements Document</div>
+  <h1>kdmp: Retail Modern Fulfillment OS</h1>
+  <p class="lede">A frontend mockup of the internal operating system for FMCG distribution across Java. v1 demonstrates the daily fulfillment loop so stakeholders can see the workflow, feel the pace, and approve the shape of the product before any engineering investment.</p>
+  <dl class="meta">
+    <dt>Document type</dt><dd>PRD v1.1 (Mockup scope, draft for review)</dd>
+    <dt>Author</dt><dd>Principal Product Manager</dd>
+    <dt>Status</dt><dd><span class="pill accent">Draft</span> Pending design partner sign off</dd>
+    <dt>Scope</dt><dd>Frontend mockup. No backend, no real data, no integrations.</dd>
+    <dt>Delivery</dt><dd>Single web app (TanStack Start) running entirely from typed mock fixtures.</dd>
+    <dt>Design system</dt><dd>shadcn/ui on Base UI primitives. No custom components.</dd>
+  </dl>
+</header>
+
+<div class="banner">
+  Mockup project<br />
+  <span>This is a presentation deliverable, not a production system. Every screen reads from in-repo mock data. There is no backend, no database, no auth service, no API. Any requirement that implies a server is a documentation of intent for the future, not a build target.</span>
+</div>
+
+<nav>
+  <h4 style="margin-top:0">Contents</h4>
+  <ol class="toc">
+    <li class="nav-li"><a href="#tldr">1. TL;DR</a></li>
+    <li class="nav-li"><a href="#problem">2. Problem and Context</a></li>
+    <li class="nav-li"><a href="#goals">3. Goals, Non Goals, Constraints</a></li>
+    <li class="nav-li"><a href="#personas">4. Users and Personas</a></li>
+    <li class="nav-li"><a href="#concept">5. Core Concept: the Suggested Orders Loop</a></li>
+    <li class="nav-li"><a href="#journeys">6. Primary User Journeys</a></li>
+    <li class="nav-li"><a href="#surfaces">7. Surfaces and Functional Requirements</a></li>
+    <li class="nav-li"><a href="#mock">8. Mock Data Strategy</a></li>
+    <li class="nav-li"><a href="#shape">9. Shape of the Mock Fixtures</a></li>
+    <li class="nav-li"><a href="#nfr">10. Frontend Quality Bar</a></li>
+    <li class="nav-li"><a href="#demo">11. Demo Scenarios and Success Criteria</a></li>
+    <li class="nav-li"><a href="#milestones">12. Sprint Plan</a></li>
+    <li class="nav-li"><a href="#risks">13. Risks and Mitigations</a></li>
+    <li class="nav-li"><a href="#open">14. Open Questions</a></li>
+    <li class="nav-li"><a href="#appendix">15. Appendix: shadcn Component Inventory</a></li>
+  </ol>
+</nav>
+
+<!-- ====================== TL;DR ====================== -->
+<h2 id="tldr"><span class="num">1.</span>TL;DR</h2>
+<p>
+  Our FMCG distribution business runs on phone calls, WhatsApp, and spreadsheets. We want to replace that with a single internal product. Before we spend engineering quarters on it, we need a working visual proof that the operator's day, the store's two minutes, and the driver's route all fit together.
+</p>
+<p>
+  <strong>kdmp v1 is that visual proof.</strong> It is a frontend mockup of five surfaces (DC Ops dashboard, Store mobile, Driver app, Regional Supervisor view, Executive KPI summary) wired to typed mock fixtures. Stakeholders can click through realistic data, walk through five scripted scenarios, and decide whether to fund the production build.
+</p>
+<div class="callout accent">
+  <h4>The product decision this mockup is built to test</h4>
+  <p>
+    Pull based ordering keeps the stock out problem. Pure auto allocation over ships. The suggested orders loop (system drafts, store approves) is the smallest design that removes "remember to order" without removing store agency. The mockup exists to make leadership feel that loop, not to argue for it on slides.
+  </p>
+</div>
+
+<!-- ====================== PROBLEM ====================== -->
+<h2 id="problem"><span class="num">2.</span>Problem and Context</h2>
+
+<h3>2.1 Where we are today</h3>
+<p>
+  We distribute fast moving consumer goods (ambient categories: snacks, beverages, toiletries) to modern trade stores across Java. Stores call when they notice they are running low. By then the shelf has been empty for a day, and the missed sale is permanent. Internally we operate from spreadsheets and group chats. There is no system of record for shipments, expected stock on hand, or today's truck assignments. Every DC works its own way; every supervisor has their own Excel.
+</p>
+
+<h3>2.2 Why a mockup first</h3>
+<ul>
+  <li><strong>Confidence before commitment.</strong> The full build is a multi quarter investment. We want leadership and ops to walk the workflow before signing the check.</li>
+  <li><strong>Design first, not engineering first.</strong> Most of the risk in this product is workflow design, not technology. A mockup surfaces design problems while they are still cheap to fix.</li>
+  <li><strong>Concrete artifact for ops review.</strong> A clickable mockup gets a sharper critique from DC managers than a slide deck or a Figma flow.</li>
+</ul>
+
+<h3>2.3 What this mockup is and is not</h3>
+<p><strong>Is:</strong> a clickable web app with five surfaces, populated by realistic mock data, runnable locally, demoable in a meeting, capable of telling the story of a full operational day in fifteen minutes.</p>
+<p><strong>Is not:</strong> a production system, a connected app, a hosted SaaS, a backend, a real data pipeline, or a finished spec. Numbers shown are illustrative, not measured. Actions persist only within the session and only against in memory mock state.</p>
+
+<!-- ====================== GOALS ====================== -->
+<h2 id="goals"><span class="num">3.</span>Goals, Non Goals, Constraints</h2>
+
+<h3>3.1 Goals</h3>
+<ol>
+  <li><strong>Make the suggested orders loop felt, not described.</strong> A reviewer can click through the loop on each surface and recognise it as the right operating model.</li>
+  <li><strong>Show density without showing chaos.</strong> The DC Ops dashboard has to look like a real operator's tool: many rows, many filters, fast keyboard motion. Not a marketing screenshot.</li>
+  <li><strong>Demonstrate exception flow.</strong> When something goes wrong (driver flags closed store, store edits suggested qty, partial delivery), the mockup shows what happens and where the operator sees it.</li>
+  <li><strong>Be presentable on a laptop, in a browser, with no setup.</strong> One <code>bun dev</code> and the entire mockup is live.</li>
+</ol>
+
+<h3>3.2 Non Goals</h3>
+<ul>
+  <li>Any backend service. No API, no database, no auth provider, no background jobs.</li>
+  <li>Real data, real customers, or real stores. All names, addresses, and SKUs are fictional.</li>
+  <li>Real fulfillment math. The "suggested orders engine" is a deterministic mock that returns plausible numbers, not a forecasting model.</li>
+  <li>User accounts and authorization. A role switcher in the header lets the demo viewer impersonate any persona instantly.</li>
+  <li>Returns, cold chain, hazardous goods, multi DC stock balancing.</li>
+  <li>Productization for external distributors.</li>
+  <li>Internationalization beyond fixed Indonesian formatting (currency, dates, sample text).</li>
+</ul>
+
+<h3>3.3 Constraints</h3>
+<ul>
+  <li><strong>Frontend only.</strong> The deliverable runs entirely client side. Mock data lives in <code>src/mocks/</code>. Network calls are forbidden.</li>
+  <li><strong>shadcn/ui only.</strong> All UI is composed from <code>src/components/ui/</code>. No new component primitives without a PRD change.</li>
+  <li><strong>Stack:</strong> TanStack Start, TanStack Router (file based), React 19, TypeScript 6, Tailwind CSS 4. See project <code>CLAUDE.md</code>.</li>
+  <li><strong>Copy quality:</strong> active voice, specific over vague, no buzzwords, no em dashes, no exclamation points in product copy.</li>
+  <li><strong>Geography and locale:</strong> Java, Indonesia. WIB timezone. IDR currency with period grouping (Rp 1.234.567). UI language English in v1, Bahasa Indonesia copy on field surfaces as a stretch goal.</li>
+</ul>
+
+<!-- ====================== PERSONAS ====================== -->
+<h2 id="personas"><span class="num">4.</span>Users and Personas</h2>
+
+<p>Five personas. In the mockup, a role switcher in the app header lets a single reviewer try every surface in one session.</p>
+
+<div class="grid-2">
+
+  <div class="card">
+    <h4>Rina, DC Ops Manager <span class="pill accent">Primary</span></h4>
+    <div class="role">Runs a distribution center. Lives in the dashboard.</div>
+    <p class="small">Reviews the suggested orders queue, confirms dispatch, assigns trucks and drivers, watches in transit, handles exceptions. Optimises for throughput and on time rate. Lives on desktop.</p>
+    <p class="small"><strong>Needs:</strong> dense tables, keyboard shortcuts, bulk actions, exception filters, low latency interactions.</p>
+  </div>
+
+  <div class="card">
+    <h4>Budi, Store Owner <span class="pill">Data producer</span></h4>
+    <div class="role">Mobile only. Opens the app once or twice a day.</div>
+    <p class="small">Receives a draft suggested order. Confirms or edits quantities, then submits. Confirms receipt when delivery arrives.</p>
+    <p class="small"><strong>Needs:</strong> a simple list with suggested qty, one tap approve, big buttons.</p>
+  </div>
+
+  <div class="card">
+    <h4>Andi, Driver <span class="pill">Field</span></h4>
+    <div class="role">Mobile only. In a truck during the day.</div>
+    <p class="small">Sees today's route, marks each stop delivered, captures proof of delivery, reports exceptions.</p>
+    <p class="small"><strong>Needs:</strong> large tap targets, minimal text input, stays one screen ahead.</p>
+  </div>
+
+  <div class="card">
+    <h4>Sari, Regional Supervisor <span class="pill">Monitor</span></h4>
+    <div class="role">Web. Glances 1 to 3 times a day.</div>
+    <p class="small">Owns a cluster of stores. Watches fulfillment health, drills into exceptions, escalates to DC Ops. Read only.</p>
+    <p class="small"><strong>Needs:</strong> cluster filter, exception view, fast drill down to a specific order.</p>
+  </div>
+
+  <div class="card">
+    <h4>Pak Hadi, Head of Supply Chain <span class="pill">Exec</span></h4>
+    <div class="role">Web. Daily glance, weekly deep dive.</div>
+    <p class="small">Reads top line KPIs: stock out rate trend, on time delivery, suggested order acceptance, average cycle time.</p>
+    <p class="small"><strong>Needs:</strong> clean summary, period selector, no operational actions.</p>
+  </div>
+
+  <div class="card">
+    <h4>System actor, Replenishment Engine <span class="pill warn">Mock</span></h4>
+    <div class="role">Client side simulator in the mockup.</div>
+    <p class="small">In the real product this is a server job. In the mockup it is a deterministic function over fixtures that produces suggested orders on demand, so demos always show the same shape of data.</p>
+  </div>
+
+</div>
+
+<!-- ====================== CONCEPT ====================== -->
+<h2 id="concept"><span class="num">5.</span>Core Concept: the Suggested Orders Loop</h2>
+
+<p>The product hinges on one closed feedback loop. The mockup must let any reviewer trace the loop across every surface in under fifteen minutes.</p>
+
+<ol>
+  <li><strong>Infer.</strong> For each (store, SKU) the mock engine returns an estimated stock on hand based on last delivered qty and a default daily burn rate. In the real product this is a recurring job; in the mockup it is a memoised function.</li>
+  <li><strong>Suggest.</strong> When days of cover drops below threshold, the SKU joins that store's draft suggested order. Orders are batched per store on a cadence.</li>
+  <li><strong>Nudge.</strong> When the draft is ready, the Store surface shows a "ready to review" card.</li>
+  <li><strong>Approve.</strong> Budi opens the draft, accepts, edits, or removes lines, then submits.</li>
+  <li><strong>Confirm and dispatch.</strong> Rina sees the new order. She confirms it, assigns it to a wave with a truck and driver.</li>
+  <li><strong>Deliver.</strong> Andi sees the route, delivers, captures POD.</li>
+  <li><strong>Reconcile.</strong> Delivered qty becomes the new "last delivered" in the mock state, closing the loop for the next cycle.</li>
+</ol>
+
+<div class="callout">
+  <h4>How the loop runs in the mockup</h4>
+  <p>The entire loop runs in memory. The mock state object is held in a Zustand or similar client store. Submitting an order updates the store state immediately; the next surface a reviewer visits sees the change. On page refresh, the mock state can either reset to a fresh demo baseline or persist via <code>localStorage</code>, configurable from the role switcher.</p>
+</div>
+
+<!-- ====================== JOURNEYS ====================== -->
+<h2 id="journeys"><span class="num">6.</span>Primary User Journeys</h2>
+
+<h3>6.1 Rina's daily loop</h3>
+<ol>
+  <li>Opens dashboard, lands on <em>Today</em>. Sees counts of orders pending approval, in pick, dispatched, in transit, exceptions.</li>
+  <li>Opens <em>Suggested Orders</em>. Reviews submitted orders. Bulk confirms most; flags a few for manual review.</li>
+  <li>Opens <em>Dispatch</em>. Groups confirmed orders into waves, assigns trucks and drivers.</li>
+  <li>Watches <em>In Transit</em>. Acts on exceptions as they arrive.</li>
+  <li>End of day: opens <em>Reconciliation</em>, confirms everything delivered, rolls over what was not.</li>
+</ol>
+
+<h3>6.2 Budi's two minutes</h3>
+<ol>
+  <li>Sees "Suggested order ready, 14 items" on home.</li>
+  <li>Opens the draft, taps Approve all, submits.</li>
+  <li>Later: delivery arrives, signs and photos receipt.</li>
+</ol>
+
+<h3>6.3 Andi's route</h3>
+<ol>
+  <li>Logs in, sees the day's route as an ordered list.</li>
+  <li>Taps stop, sees the order, taps navigate.</li>
+  <li>At the store, confirms qty delivered, captures photo and signature.</li>
+  <li>Marks complete, scrolls to next stop.</li>
+  <li>Reports exceptions inline with a reason code and a photo.</li>
+</ol>
+
+<!-- ====================== SURFACES ====================== -->
+<h2 id="surfaces"><span class="num">7.</span>Surfaces and Functional Requirements</h2>
+
+<p class="legend">
+  <span><span class="pill accent">P0</span> required for the mockup to demo end to end</span>
+  <span><span class="pill warn">P1</span> needed for a polished demo, can ship in a follow up sprint</span>
+  <span><span class="pill">P2</span> optional polish, ship if time permits</span>
+</p>
+
+<!-- 7.1 DC Ops -->
+<h3 class="surface-title"><span>7.1 DC Ops Dashboard <span class="pill accent">Primary surface, desktop web</span></span></h3>
+<p>Desktop first. Information dense. The surface that has to feel like a real operator's tool.</p>
+
+<h4>Information architecture</h4>
+<p>Single app shell using <code>Sidebar</code> for top level navigation. Top level sections:</p>
+<ol>
+  <li><strong>Today.</strong> KPI strip and exception list. Default landing.</li>
+  <li><strong>Suggested Orders.</strong> Draft, submitted, and needs review queues.</li>
+  <li><strong>Dispatch.</strong> Wave builder, truck and driver assignment.</li>
+  <li><strong>In Transit.</strong> Live delivery board.</li>
+  <li><strong>Stores.</strong> Directory and per store detail.</li>
+  <li><strong>Catalog.</strong> SKU master with thresholds.</li>
+  <li><strong>Reconciliation.</strong> End of day close out.</li>
+</ol>
+
+<h4>Functional requirements</h4>
+<table>
+  <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:60px">Pri</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">DC-01</span></td><td>Today view shows live counts: submitted pending approval, in pick, in dispatch, in transit, exceptions. Built with <code>Card</code> and <code>Badge</code>.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-02</span></td><td>Suggested Orders queue is a sortable, filterable <code>Table</code> with row level <code>Checkbox</code>, <code>DropdownMenu</code> for row actions, and a bulk action toolbar.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-03</span></td><td>Bulk Confirm action moves selected orders to the pick queue in one client side transaction. Uses <code>AlertDialog</code> for confirmation and <code>Sonner</code> toast for result.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-04</span></td><td>Per order detail opens in a <code>Sheet</code> on the right. Shows line items, store info, inferred stock context, edit history.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-05</span></td><td>Dispatch wave builder assigns truck and driver via <code>Combobox</code>, slot date via <code>DatePicker</code>. v1 does not include map based route optimization.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-06</span></td><td>In Transit board: <code>Tabs</code> per wave, <code>Table</code> of stops with <code>Badge</code> driven status (queued, arrived, delivered, exception). Mock updates simulate progress over time via client timer (configurable speed in the role switcher).</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-07</span></td><td>Exception triage: driver flagged exceptions appear in the Today exception list with <code>HoverCard</code> context and quick actions (reschedule, reassign, close).</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-08</span></td><td>Per store page shows inferred days of cover (a <code>Table</code> with colored <code>Badge</code> per SKU), recent orders, delivery on time history.</td><td><span class="pill warn">P1</span></td></tr>
+    <tr><td><span class="req-id">DC-09</span></td><td>Catalog CRUD via <code>Form</code> with <code>Input</code>, <code>Select</code>, <code>Textarea</code>. Per SKU reorder threshold and default daily burn. Writes update mock state.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DC-10</span></td><td>End of day reconciliation: one screen lists today's planned deliveries with status. Close day action is gated until every non delivered has a reason captured via <code>Dialog</code>.</td><td><span class="pill warn">P1</span></td></tr>
+    <tr><td><span class="req-id">DC-11</span></td><td>Global <code>Command</code> palette opens with <kbd>⌘K</kbd>. Jump to store, jump to order, jump to SKU.</td><td><span class="pill warn">P1</span></td></tr>
+    <tr><td><span class="req-id">DC-12</span></td><td>Keyboard shortcuts on Suggested Orders queue: <kbd>j</kbd> <kbd>k</kbd> navigate, <kbd>x</kbd> select, <kbd>c</kbd> confirm selected, <kbd>/</kbd> focus search.</td><td><span class="pill">P2</span></td></tr>
+  </tbody>
+</table>
+
+<!-- 7.2 Store mobile -->
+<h3 class="surface-title"><span>7.2 Store / Merchandiser Mobile <span class="pill accent">Mobile web (PWA shape, no service worker required)</span></span></h3>
+<p>Low friction, large tap targets, demo runs in a desktop browser at mobile viewport size.</p>
+
+<table>
+  <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:60px">Pri</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">ST-01</span></td><td>Login screen with phone number and OTP fields (mocked: any 6 digits succeeds). Uses <code>Form</code> and <code>InputOTP</code>.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">ST-02</span></td><td>Home shows current draft suggested order as a <code>Card</code> with item count and "Review and submit" button. Past orders below in <code>Tabs</code>.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">ST-03</span></td><td>Draft order screen lists SKUs with suggested qty, minus and plus buttons (<code>Button</code> plus <code>Input</code>), per row Remove via <code>DropdownMenu</code>.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">ST-04</span></td><td>"Approve all and submit" primary <code>Button</code>. Disabled until at least one line item remains.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">ST-05</span></td><td>POD confirmation screen on delivery day. Shows expected delivery; "Mark received" with photo upload via file <code>Input</code> (no real upload, displays the chosen image).</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">ST-06</span></td><td>Simulated offline state in the role switcher. Submissions queue locally; banner indicates queued state; clearing the simulated offline flag flushes the queue with toast confirmation.</td><td><span class="pill warn">P1</span></td></tr>
+    <tr><td><span class="req-id">ST-07</span></td><td>Order history filter by date range via <code>Calendar</code> in a <code>Popover</code>.</td><td><span class="pill">P2</span></td></tr>
+  </tbody>
+</table>
+
+<!-- 7.3 Driver -->
+<h3 class="surface-title"><span>7.3 Driver App <span class="pill accent">Mobile web</span></span></h3>
+
+<table>
+  <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:60px">Pri</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">DR-01</span></td><td>Login screen with phone and OTP, identical pattern to Store.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DR-02</span></td><td>"My route today" screen: ordered list of stops as <code>Card</code>s with store name, ETA window, status <code>Badge</code>.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DR-03</span></td><td>Stop detail screen with order summary, store contact (tap to call via plain <code>Button</code> with <code>tel:</code>), navigate (external link to maps).</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DR-04</span></td><td>Delivery confirmation: actual qty per line (defaults to ordered), photo POD via file <code>Input</code>, signature pad in a <code>Sheet</code>. The signature pad uses an HTML canvas inside a shadcn <code>Sheet</code>; the canvas element is a browser primitive, not a custom React component.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DR-05</span></td><td>Exception flow: <code>RadioGroup</code> of reason codes (closed, refused, damaged, address wrong, other) and optional note via <code>Textarea</code>. Photo required.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">DR-06</span></td><td>Auto advance: completing a stop scrolls to the next pending stop.</td><td><span class="pill warn">P1</span></td></tr>
+    <tr><td><span class="req-id">DR-07</span></td><td>Simulated offline POD submission queue (same pattern as ST-06).</td><td><span class="pill warn">P1</span></td></tr>
+  </tbody>
+</table>
+
+<!-- 7.4 Supervisor -->
+<h3 class="surface-title"><span>7.4 Regional Supervisor Dashboard <span class="pill accent">Web, read only</span></span></h3>
+
+<table>
+  <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:60px">Pri</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">SU-01</span></td><td>Cluster picker (multi store) via <code>Combobox</code>. Selection persists for the session.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">SU-02</span></td><td>Health summary: per store row with on time percent, recent stock out flags, last delivered date. Uses <code>Table</code>, <code>Badge</code>, <code>Tooltip</code>.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">SU-03</span></td><td>Exception drill down: filter today's exceptions across cluster, click into a <code>Sheet</code> for order detail.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">SU-04</span></td><td>No write actions. Buttons that would trigger ops actions are absent, not disabled.</td><td><span class="pill accent">P0</span></td></tr>
+  </tbody>
+</table>
+
+<!-- 7.5 Exec -->
+<h3 class="surface-title"><span>7.5 Executive KPI Summary <span class="pill accent">Web, read only</span></span></h3>
+
+<table>
+  <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:60px">Pri</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">EX-01</span></td><td>Single page dashboard with four KPI tiles (<code>Card</code> with large prominent number plus delta) for stock out rate, on time percent, suggested order acceptance, average cycle hours. Numbers come from the mock fixtures, not a computed pipeline.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">EX-02</span></td><td>Period selector for Today, 7 days, 30 days via <code>Tabs</code>. Each tab reads from a different precomputed mock fixture.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">EX-03</span></td><td>Per DC breakdown <code>Table</code> below the tiles.</td><td><span class="pill accent">P0</span></td></tr>
+    <tr><td><span class="req-id">EX-04</span></td><td>Trend indicators: textual delta with a <code>Badge</code> (up, down, flat). No chart components in v1. If sparklines are added later they must compose from shadcn primitives or be cut.</td><td><span class="pill warn">P1</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ====================== MOCK DATA STRATEGY ====================== -->
+<h2 id="mock"><span class="num">8.</span>Mock Data Strategy</h2>
+
+<p>Mock data is not an afterthought, it is the product. The reviewer's belief in the workflow depends on the data feeling real.</p>
+
+<h3>8.1 Principles</h3>
+<ul>
+  <li><strong>Plausible, not random.</strong> Names, addresses, SKUs, and quantities should pass a glance test for someone who works in FMCG Java. Use Indonesian store names, Indonesian street addresses, common FMCG SKUs and brand archetypes (without using real brand names).</li>
+  <li><strong>Deterministic by default.</strong> The same demo state produces the same screens every time. Stakeholders comparing notes should see the same numbers.</li>
+  <li><strong>Scenario seeded.</strong> The role switcher exposes a "scenario" selector that loads a different mock state (calm Tuesday, exception heavy Friday, end of month surge). This is how we tell the same story with different stress levels.</li>
+  <li><strong>Action mutates state.</strong> When a reviewer confirms an order, the state updates and other surfaces reflect the change. Refresh resets to the scenario baseline unless persistence is toggled on.</li>
+</ul>
+
+<h3>8.2 File layout</h3>
+<table>
+  <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>src/mocks/scenarios/*.ts</code></td><td>Named scenario seeds. Each exports a complete initial state object.</td></tr>
+    <tr><td><code>src/mocks/fixtures/*.ts</code></td><td>Building blocks: stores, SKUs, drivers, trucks, sample orders, sample exceptions.</td></tr>
+    <tr><td><code>src/mocks/engine.ts</code></td><td>The deterministic suggested orders function. Given state, returns drafts.</td></tr>
+    <tr><td><code>src/mocks/state.ts</code></td><td>Client state container (Zustand or similar). Exposes selectors and actions.</td></tr>
+    <tr><td><code>src/mocks/clock.ts</code></td><td>Demo clock helper for simulated time advancement on the In Transit board.</td></tr>
+  </tbody>
+</table>
+
+<h3>8.3 Loading and error states</h3>
+<p>Every surface shows realistic loading and error states, simulated by client side timers and a "simulate error" toggle in the role switcher. The mockup must look correct in each of: loading, empty (no orders today), populated, error. Skeletons use <code>Skeleton</code>; empty states are compositions of <code>Card</code> with an icon, a one line message, and a primary action.</p>
+
+<!-- ====================== DATA SHAPE ====================== -->
+<h2 id="shape"><span class="num">9.</span>Shape of the Mock Fixtures</h2>
+<p>Sketch only. TypeScript types live in <code>src/mocks/types.ts</code>. Sized to support 2 DCs, 50 stores, 200 SKUs in v1 mock. Production scale (2 to 3 DCs, 200 to 500 stores, ~2000 SKUs) is documented for the future build but not required for the mockup.</p>
+<table>
+  <thead><tr><th>Entity</th><th>Key fields</th><th>Relationships</th></tr></thead>
+  <tbody>
+    <tr><td><code>DC</code></td><td>id, name, address, region</td><td>has many <code>Store</code>, <code>Truck</code>, <code>User</code></td></tr>
+    <tr><td><code>Store</code></td><td>id, name, address, contact, home_dc_id, cluster_id</td><td>belongs to one <code>DC</code>, has many <code>Order</code>, <code>InferredStock</code></td></tr>
+    <tr><td><code>SKU</code></td><td>id, code, name, category, default_burn_per_day, reorder_threshold_days</td><td>used in <code>OrderLine</code>, <code>InferredStock</code></td></tr>
+    <tr><td><code>InferredStock</code></td><td>store_id, sku_id, on_hand_estimate, last_recompute_at, days_of_cover</td><td>(store, sku) unique</td></tr>
+    <tr><td><code>Order</code></td><td>id, store_id, status, created_at, source</td><td>belongs to <code>Store</code>, has many <code>OrderLine</code></td></tr>
+    <tr><td><code>OrderLine</code></td><td>order_id, sku_id, suggested_qty, requested_qty, delivered_qty</td><td></td></tr>
+    <tr><td><code>Wave</code></td><td>id, dc_id, dispatch_date, status</td><td>has many <code>Order</code>, one <code>Truck</code>, one driver <code>User</code></td></tr>
+    <tr><td><code>Truck</code></td><td>id, dc_id, plate, capacity</td><td></td></tr>
+    <tr><td><code>User</code></td><td>id, role, name, phone, dc_id?, store_id?</td><td></td></tr>
+    <tr><td><code>Exception</code></td><td>id, order_id, reason_code, note, photo_url, created_by, created_at</td><td>belongs to <code>Order</code></td></tr>
+    <tr><td><code>POD</code></td><td>id, order_id, photo_url, signature_url, captured_by, captured_at</td><td>belongs to <code>Order</code></td></tr>
+  </tbody>
+</table>
+
+<!-- ====================== NFR ====================== -->
+<h2 id="nfr"><span class="num">10.</span>Frontend Quality Bar</h2>
+
+<p>Backend NFRs (availability, throughput, durability) are not applicable. The bar below applies only to the frontend deliverable.</p>
+
+<h3>10.1 Performance</h3>
+<ul>
+  <li>Initial paint of the DC Ops dashboard under 1.5 seconds on a wired desktop.</li>
+  <li>Queue interactions under 200 ms perceived latency. Long lists virtualise if they cross 200 rows.</li>
+  <li>The In Transit timer must not block the main thread.</li>
+</ul>
+
+<h3>10.2 Responsive behavior</h3>
+<ul>
+  <li>DC Ops dashboard is desktop first, usable down to 1280 px wide. Below that, show a "switch to desktop" notice rather than degrade.</li>
+  <li>Store and Driver surfaces are mobile first, work down to 360 px wide.</li>
+  <li>Supervisor and Exec surfaces are usable on both desktop and tablet.</li>
+</ul>
+
+<h3>10.3 Accessibility</h3>
+<ul>
+  <li>WCAG AA on the DC Ops dashboard. Color contrast verified for every <code>Badge</code> status variant.</li>
+  <li>All shadcn components used in their unmodified form; their built in keyboard and ARIA behavior must not be overridden.</li>
+  <li>Mobile surfaces: minimum 44 by 44 pt tap targets, focus rings preserved.</li>
+</ul>
+
+<h3>10.4 Visual quality (per /impeccable)</h3>
+<ul>
+  <li>Color in OKLCH (already configured in <code>src/styles.css</code>). No pure black, no pure white in product surfaces.</li>
+  <li>Typography hierarchy via scale and weight contrast, at least 1.25 ratio between steps.</li>
+  <li>No side stripe borders, no gradient text, no glassmorphism by default, no hero metric template, no identical card grids, no modal as first thought. Banned by the design system; banned here too.</li>
+  <li>Spacing varies for rhythm. Same padding everywhere is monotony.</li>
+</ul>
+
+<h3>10.5 Copy quality (per /marketing-skills:copywriting)</h3>
+<ul>
+  <li>Active voice. Specific over vague. Customer language over company language.</li>
+  <li>No em dashes. No exclamation points in product copy. No marketing buzzwords.</li>
+  <li>CTAs say what the user gets: "Confirm orders", "Submit to DC", "Mark delivered". Never "Submit", "OK", "Click here".</li>
+  <li>Empty state copy describes what to do next, not what is absent.</li>
+</ul>
+
+<!-- ====================== DEMO ====================== -->
+<h2 id="demo"><span class="num">11.</span>Demo Scenarios and Success Criteria</h2>
+
+<p>Because there is no live data, success is judged by how well the mockup tells the story in a stakeholder review. Five scripted scenarios cover the daily loop and the most important edge cases.</p>
+
+<table>
+  <thead><tr><th style="width:24%">Scenario</th><th>What the reviewer does</th><th>What proves it works</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>1. Calm Tuesday</strong></td>
+      <td>Switch to Rina. Review 12 suggested orders. Bulk confirm. Build one dispatch wave. Switch to Andi, complete a route.</td>
+      <td>The reviewer never asks "what do I do here?". Each surface presents the single obvious next action.</td>
+    </tr>
+    <tr>
+      <td><strong>2. Store edits a suggestion</strong></td>
+      <td>Switch to Budi. Open the draft. Reduce one line, remove another, add a manual note. Submit.</td>
+      <td>Switch back to Rina. The order arrives in the queue with an "edited by store" indicator. Rina's view of the line shows requested vs suggested.</td>
+    </tr>
+    <tr>
+      <td><strong>3. Exception during delivery</strong></td>
+      <td>Switch to Andi. Open a stop. Tap exception. Reason: store closed. Submit with a photo.</td>
+      <td>Switch back to Rina. The exception is at the top of Today. The HoverCard shows the photo. Reassign or reschedule action works against mock state.</td>
+    </tr>
+    <tr>
+      <td><strong>4. Cluster health</strong></td>
+      <td>Switch to Sari. Pick a cluster. Spot a store with three recent exceptions. Drill into one.</td>
+      <td>Sari's surface has no write affordances. The drill down is a Sheet that opens fast and shows the relevant order.</td>
+    </tr>
+    <tr>
+      <td><strong>5. Exec glance</strong></td>
+      <td>Switch to Pak Hadi. Read four KPIs. Switch period from Today to 30 days.</td>
+      <td>Numbers and deltas change. The page is calm and uncluttered. No clickable affordances that lead nowhere.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>11.1 What "done" means for v1</h3>
+<ol>
+  <li>All five scenarios run end to end without dev intervention.</li>
+  <li>Every P0 requirement is implemented and visually polished.</li>
+  <li>The mockup loads on a clean machine with <code>bun install</code> and <code>bun dev</code>, no environment configuration required.</li>
+  <li>The reviewer's qualitative response to scenario 1 is "I would use this", not "I can imagine using this".</li>
+</ol>
+
+<!-- ====================== MILESTONES ====================== -->
+<h2 id="milestones"><span class="num">12.</span>Sprint Plan</h2>
+<p>Timeline expressed in two week sprints, relative to kickoff. The plan optimises for a working demo as early as possible, then layers polish.</p>
+
+<table>
+  <thead><tr><th style="width:90px">Sprint</th><th>Window</th><th>Deliverables</th><th>Demo gate</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>S1</strong></td>
+      <td>Week 1 to 2</td>
+      <td>App shell, sidebar, role switcher, scenario selector. Mock fixtures for 1 DC, 20 stores, 80 SKUs. <code>state.ts</code> wired up.</td>
+      <td>Switching roles changes the surface. Scenarios load distinct data.</td>
+    </tr>
+    <tr>
+      <td><strong>S2</strong></td>
+      <td>Week 3 to 4</td>
+      <td>DC Ops Today and Suggested Orders queue. Per order Sheet. Bulk confirm. Sonner integration.</td>
+      <td>Rina can confirm a batch of suggested orders end to end.</td>
+    </tr>
+    <tr>
+      <td><strong>S3</strong></td>
+      <td>Week 5 to 6</td>
+      <td>Dispatch wave builder. In Transit board with mock clock. Driver app (login, route, stop detail, POD).</td>
+      <td>Scenario 1 (Calm Tuesday) runs end to end.</td>
+    </tr>
+    <tr>
+      <td><strong>S4</strong></td>
+      <td>Week 7 to 8</td>
+      <td>Store mobile (login, draft review, submit, POD confirm). Wire scenario 2 (store edits) and scenario 3 (exception).</td>
+      <td>Scenarios 1, 2, 3 run end to end.</td>
+    </tr>
+    <tr>
+      <td><strong>S5</strong></td>
+      <td>Week 9 to 10</td>
+      <td>Supervisor cluster view. Exec KPI summary. Catalog CRUD. Reconciliation flow.</td>
+      <td>Scenarios 4 and 5 run. All P0 requirements complete.</td>
+    </tr>
+    <tr>
+      <td><strong>S6</strong></td>
+      <td>Week 11 to 12</td>
+      <td>Polish: empty states, loading skeletons, error states, accessibility audit, copy pass, command palette. P1 items.</td>
+      <td>Final demo ready. Stakeholder review.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ====================== RISKS ====================== -->
+<h2 id="risks"><span class="num">13.</span>Risks and Mitigations</h2>
+
+<table>
+  <thead><tr><th style="width:30%">Risk</th><th style="width:15%">Likelihood</th><th style="width:15%">Impact</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Mock data feels too sparse or too convenient, undermining the demo's credibility</td>
+      <td><span class="pill warn">High</span></td>
+      <td><span class="pill bad">High</span></td>
+      <td>Treat the fixtures as a design artifact. Review them with ops before S2 ships. Borrow real store name patterns and SKU archetypes from public sources.</td>
+    </tr>
+    <tr>
+      <td>Stakeholders mistake the mockup for a working system and ask "when can we use it?"</td>
+      <td><span class="pill warn">Medium</span></td>
+      <td><span class="pill warn">Medium</span></td>
+      <td>The persistent banner at the top of every surface reads "Mockup: data is illustrative". The role switcher is visibly developer flavored, not a product affordance.</td>
+    </tr>
+    <tr>
+      <td>Scope creep into backend work ("can you just hook up a real database for the demo?")</td>
+      <td><span class="pill warn">High</span></td>
+      <td><span class="pill bad">High</span></td>
+      <td>Explicit non goal in §3.2. Any request to integrate is a PRD change with PM sign off. Mock state already supports persistence via <code>localStorage</code> for multi session demos.</td>
+    </tr>
+    <tr>
+      <td>Designers and engineers reach for a custom component when shadcn primitives feel limiting</td>
+      <td><span class="pill warn">High</span></td>
+      <td><span class="pill warn">Medium</span></td>
+      <td>Hard rule in <code>CLAUDE.md</code>. Composition first, rescope second, custom never. Charts and the signature canvas are the only acknowledged primitives outside the catalog (see §15).</td>
+    </tr>
+    <tr>
+      <td>Demo runs locally but breaks on a stakeholder's machine</td>
+      <td><span class="pill warn">Medium</span></td>
+      <td><span class="pill warn">Medium</span></td>
+      <td>Single command setup. CI build on every PR. Optional static export via TanStack Start so the mockup can be served from any static host.</td>
+    </tr>
+    <tr>
+      <td>The mockup hides UX problems that only show up at production scale (1000 rows in a queue, 50 waves on a board)</td>
+      <td><span class="pill warn">Medium</span></td>
+      <td><span class="pill warn">Medium</span></td>
+      <td>Include one "stress" scenario at upper bound row counts. Virtualisation is in scope for the queue if needed.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ====================== OPEN QUESTIONS ====================== -->
+<h2 id="open"><span class="num">14.</span>Open Questions</h2>
+<ol>
+  <li><strong>UI language.</strong> English everywhere, or Bahasa Indonesia on the Store and Driver surfaces? Bahasa on field surfaces would make demos to ops more visceral.</li>
+  <li><strong>Mock state persistence default.</strong> Reset on refresh (clean every time) or persist via <code>localStorage</code> (continuity across a demo session)? Both are easy; pick one as default.</li>
+  <li><strong>Scenario count.</strong> Five named scenarios in §11. Do we need more (e.g. "warehouse short stocked", "new store onboarding")?</li>
+  <li><strong>Signature capture.</strong> Acceptable to use HTML canvas inside a shadcn Sheet for the driver signature? The canvas is a browser primitive, not a custom React component.</li>
+  <li><strong>Hosting for review.</strong> Static export to a private URL (Vercel, Cloudflare Pages) for asynchronous review, or local only? Static is recommended; needs sign off on the "demo could be screenshotted and shared externally" risk.</li>
+  <li><strong>Naming.</strong> The codebase is <code>kdmp</code>. Is that the product name in the demo or a placeholder? Product copy across the mockup depends on this.</li>
+</ol>
+
+<!-- ====================== APPENDIX ====================== -->
+<h2 id="appendix"><span class="num">15.</span>Appendix: shadcn Component Inventory</h2>
+
+<p>Components referenced by this PRD. Implementation uses only these or other unmodified shadcn primitives. Deviation requires a PRD change, not an engineering decision.</p>
+
+<h3>15.1 Used in this PRD</h3>
+<p>
+  <span class="pill">Button</span>
+  <span class="pill">Card</span>
+  <span class="pill">Badge</span>
+  <span class="pill">Table</span>
+  <span class="pill">Checkbox</span>
+  <span class="pill">DropdownMenu</span>
+  <span class="pill">AlertDialog</span>
+  <span class="pill">Dialog</span>
+  <span class="pill">Sheet</span>
+  <span class="pill">Tabs</span>
+  <span class="pill">Sidebar</span>
+  <span class="pill">Combobox</span>
+  <span class="pill">Command</span>
+  <span class="pill">DatePicker</span>
+  <span class="pill">Calendar</span>
+  <span class="pill">Popover</span>
+  <span class="pill">HoverCard</span>
+  <span class="pill">Tooltip</span>
+  <span class="pill">Form</span>
+  <span class="pill">Input</span>
+  <span class="pill">InputOTP</span>
+  <span class="pill">Textarea</span>
+  <span class="pill">Select</span>
+  <span class="pill">RadioGroup</span>
+  <span class="pill">Sonner</span>
+  <span class="pill">Skeleton</span>
+</p>
+
+<h3>15.2 Acknowledged non shadcn primitives</h3>
+<ul>
+  <li><strong>HTML canvas</strong>, only for the driver POD signature pad, wrapped in a shadcn <code>Sheet</code>.</li>
+  <li><strong>Trend indicators</strong> in the Exec KPI summary use textual deltas with <code>Badge</code>. No chart library is being added by this PRD.</li>
+</ul>
+
+<h3>15.3 Installation note</h3>
+<p class="small">At PRD authoring time, only <code>src/components/ui/button.tsx</code> exists in the repo. Every other component above must be added via the shadcn CLI in its standard form. If a component is unavailable in shadcn's catalog for the pinned version, escalate to PM before substituting.</p>
+
+<hr />
+<p class="small" style="text-align:center; color: var(--subtle);">
+  End of document. kdmp PRD v1.1 (Mockup scope, draft). Prepared for design partner review.
+</p>
+
+</div>
+</body>
+</html>
