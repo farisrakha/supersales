@@ -38,7 +38,7 @@ export const Route = createRootRoute({
     <main className="container mx-auto p-6 pt-16">
       <h1 className="font-heading text-2xl font-semibold">Page not found</h1>
       <p className="mt-2 text-muted-foreground">
-        The page you requested does not exist in this mockup.
+        This page doesn't exist in the SuperSales demo. Use the sidebar to navigate.
       </p>
     </main>
   ),

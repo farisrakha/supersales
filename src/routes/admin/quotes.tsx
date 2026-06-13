@@ -197,7 +197,8 @@ function QuotesPage() {
     if (!selectedQuoteId) return
     updateQuoteStatus(selectedQuoteId, quoteStatusEdit)
     setSelectedQuoteId(null)
-    toast.success("Quote updated.")
+    const label = STATUS_OPTIONS.find((o) => o.value === quoteStatusEdit)?.label ?? quoteStatusEdit
+    toast.success(`Quote updated to ${label}`)
   }
 
   return (

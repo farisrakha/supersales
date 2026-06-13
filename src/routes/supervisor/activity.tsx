@@ -133,7 +133,7 @@ function ActivityFeedPage() {
     }
     updateQuoteStatus(quote.id, "new")
     setFlaggedVisitIds((prev) => new Set([...prev, visitId]))
-    toast.success("Flagged for admin review.")
+    toast.success("Flagged for Bima")
   }
 
   if (loading) {
