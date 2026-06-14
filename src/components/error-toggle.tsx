@@ -3,8 +3,7 @@ import { Label } from "@/components/ui/label"
 import { useDevtools } from "@/components/devtools-context"
 
 export function ErrorToggle() {
-  const simulateError = useDevtools().simulateError
-  const setSimulateError = useDevtools().setSimulateError
+  const { simulateError, setSimulateError } = useDevtools()
   return (
     <div className="hidden items-center gap-2 rounded-full border border-dashed border-border bg-background px-2.5 py-1 md:flex">
       <Label

@@ -1,3 +1,4 @@
+import * as React from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Alert02Icon, RefreshIcon } from "@hugeicons/core-free-icons"
 
@@ -19,8 +20,7 @@ import { useDevtools } from "@/components/devtools-context"
  *   if (guard) return guard
  */
 export function useSimulatedError(): React.ReactNode | null {
-  const simulateError = useDevtools().simulateError
-  const setSimulateError = useDevtools().setSimulateError
+  const { simulateError, setSimulateError } = useDevtools()
   if (!simulateError) return null
   return (
     <div className="container mx-auto max-w-2xl px-5 py-10">

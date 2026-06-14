@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/select"
 
 import { useMockStore } from "@/mocks/state"
-import type { QuoteStatus, VisitOutcome } from "@/mocks/types"
+import type { QuoteStatus } from "@/mocks/types"
 
 export const Route = createFileRoute("/admin/quotes")({ component: QuotesPage })
 
@@ -73,29 +73,6 @@ function isoToDate(iso: string): string {
   return iso.slice(0, 10)
 }
 
-function OutcomeBadge({ outcome }: { outcome: VisitOutcome }) {
-  if (outcome === "interested") {
-    return (
-      <Badge
-        variant="outline"
-        className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-      >
-        Interested
-      </Badge>
-    )
-  }
-  if (outcome === "quote_submitted") {
-    return (
-      <Badge
-        variant="outline"
-        className="border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300"
-      >
-        Quote submitted
-      </Badge>
-    )
-  }
-  return <Badge variant="outline">Not interested this visit</Badge>
-}
 
 function QuoteStatusBadge({ status }: { status: QuoteStatus }) {
   if (status === "new") {

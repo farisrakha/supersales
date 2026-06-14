@@ -7,6 +7,7 @@ import { nitro } from "nitro/vite"
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  build: { chunkSizeWarningLimit: 1000 },
   plugins: [
     devtools(),
     tailwindcss(),
