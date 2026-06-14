@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupervisorRouteRouteImport } from './routes/supervisor/route'
 import { Route as ExecRouteRouteImport } from './routes/exec/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as SupervisorIndexRouteImport } from './routes/supervisor/index'
 import { Route as ExecIndexRouteImport } from './routes/exec/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -35,6 +36,11 @@ const ExecRouteRoute = ExecRouteRouteImport.update({
 const AdminRouteRoute = AdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupervisorIndexRoute = SupervisorIndexRouteImport.update({
@@ -84,6 +90,7 @@ const AdminCatalogRoute = AdminCatalogRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
@@ -98,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/supervisor/': typeof SupervisorIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/quotes': typeof AdminQuotesRoute
   '/admin/reps': typeof AdminRepsRoute
@@ -110,6 +118,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/exec': typeof ExecRouteRouteWithChildren
   '/supervisor': typeof SupervisorRouteRouteWithChildren
@@ -126,6 +135,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/admin'
     | '/exec'
     | '/supervisor'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/supervisor/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/admin/catalog'
     | '/admin/quotes'
     | '/admin/reps'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/supervisor'
   id:
     | '__root__'
+    | '/'
     | '/admin'
     | '/exec'
     | '/supervisor'
@@ -166,6 +178,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   ExecRouteRoute: typeof ExecRouteRouteWithChildren
   SupervisorRouteRoute: typeof SupervisorRouteRouteWithChildren
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supervisor/': {
@@ -309,6 +329,7 @@ const SupervisorRouteRouteWithChildren = SupervisorRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   ExecRouteRoute: ExecRouteRouteWithChildren,
   SupervisorRouteRoute: SupervisorRouteRouteWithChildren,
